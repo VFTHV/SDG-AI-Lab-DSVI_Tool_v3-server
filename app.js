@@ -19,6 +19,9 @@ app.use(express.json());
 // routes
 app.use('/api/v1/auth', authRouter);
 
+app.use(notFountMiddleware);
+app.use(errorHandlerMiddleware);
+
 const port = process.env.PORT || 3000;
 
 const start = async () => {
