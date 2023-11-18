@@ -4,13 +4,13 @@ require('express-async-errors');
 const express = require('express');
 const app = express();
 
-// routers
-
 // error handlers
+const notFountMiddleware = require('./middleware/not-found');
+const errorHandlerMiddleware = require('./middleware/error-handler');
 
-//
 app.use(express.json());
 
+// routers
 app.get('/', (req, res) => {
   res.send('jobs api');
 });
