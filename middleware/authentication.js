@@ -10,6 +10,8 @@ const auth = async (req, res, next) => {
   }
   const token = authHeader.split(' ')[1];
   //  add try catch block
+  //  add try catch block
+  //  add try catch block
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
     // attach the user to req object, so it could be used in next middleware
