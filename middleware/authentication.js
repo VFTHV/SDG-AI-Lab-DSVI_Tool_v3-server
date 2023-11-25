@@ -12,6 +12,7 @@ const auth = async (req, res, next) => {
   // adding a token
   // adding a token
   // adding a token
+  // adding a token
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
