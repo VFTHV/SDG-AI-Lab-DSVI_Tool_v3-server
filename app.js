@@ -10,7 +10,7 @@ const connectDB = require('./db/connect');
 const authRouter = require('./routes/authRouter');
 
 // error handlers
-const notFountMiddleware = require('./middleware/not-found');
+const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 app.use(express.json());
@@ -19,7 +19,7 @@ app.use(express.json());
 // routes
 app.use('/api/v1/auth', authRouter);
 
-app.use(notFountMiddleware);
+app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
 const port = process.env.PORT || 3000;
