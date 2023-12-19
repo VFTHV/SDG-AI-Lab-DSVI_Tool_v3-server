@@ -36,6 +36,7 @@ const login = async (req, res) => {
   // change user object
   // change user object
   // change user object
+  // change user object
   res
     .status(StatusCodes.OK)
     .json({ user: { name: user.name, email: user.email, token } });
