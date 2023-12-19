@@ -35,6 +35,7 @@ const login = async (req, res) => {
   const token = user.createJWT();
   // change user object
   // change user object
+  // change user object
   res
     .status(StatusCodes.OK)
     .json({ user: { name: user.name, email: user.email, token } });
