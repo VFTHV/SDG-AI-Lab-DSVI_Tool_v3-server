@@ -6,6 +6,7 @@ const app = express();
 
 // connectDB
 const connectDB = require('./db/connect');
+const authenticateUser = require('./middleware/authentication');
 // routers
 const authRouter = require('./routes/authRouter');
 
