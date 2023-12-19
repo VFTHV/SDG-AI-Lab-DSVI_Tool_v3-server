@@ -4,6 +4,12 @@ require('express-async-errors');
 const express = require('express');
 const app = express();
 
+// extra security packages
+const cors = require('cors');
+const helmet = require('helmet');
+// const xss = require('xss-clean');
+const rateLimiter = require('express-rate-limit');
+
 // connectDB
 const connectDB = require('./db/connect');
 const authenticateUser = require('./middleware/authentication');
@@ -16,6 +22,7 @@ const errorHandlerMiddleware = require('./middleware/error-handler');
 
 app.use(express.json());
 // extra packages
+app.use(cors());
 
 // routes
 app.use('/api/v1/auth', authRouter);
