@@ -13,6 +13,7 @@ const auth = async (req, res, next) => {
   // authentication rule
   // authentication rule
   // authentication rule
+  // authentication rule
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
