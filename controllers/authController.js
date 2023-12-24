@@ -5,6 +5,7 @@ const { StatusCodes } = require('http-status-codes');
 const register = async (req, res) => {
   console.log('register user triggered');
   console.log('new register controller');
+  console.log('new register controller');
   const user = await User.create({ ...req.body });
   const token = user.createJWT();
 
