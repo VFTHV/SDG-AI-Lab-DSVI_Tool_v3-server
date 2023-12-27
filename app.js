@@ -13,6 +13,8 @@ const rateLimiter = require('express-rate-limit');
 // connectDB
 const connectDB = require('./db/connect');
 // authenticate user middleware
+// authenticate user middleware
+
 const authenticateUser = require('./middleware/authentication');
 // routers
 const authRouter = require('./routes/authRouter');
