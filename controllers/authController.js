@@ -18,6 +18,7 @@ const register = async (req, res) => {
   // bad request error
   // bad request error
   // bad request error
+  // bad request error
   res.status(StatusCodes.CREATED).json({
     user: { name: user.name, email: user.email, token },
   });
