@@ -15,6 +15,7 @@ const register = async (req, res) => {
   //   throw new CustomError.BadRequestError('Email already exists');
   // }
   // bad request error
+  // bad request error
   res.status(StatusCodes.CREATED).json({
     user: { name: user.name, email: user.email, token },
   });
