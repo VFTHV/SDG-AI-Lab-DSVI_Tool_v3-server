@@ -1,19 +1,27 @@
 const { BadRequestError, UnauthenticatedError } = require('../errors');
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
+const sendEmail = require('../utils/sendEmail');
+const crypto = require('crypto');
 
 const register = async (req, res) => {
+  const { email, name, password } = req.body;
   console.log('register user triggered');
 
-  const user = await User.create({ ...req.body });
-  const token = user.createJWT();
+  const emailAlreadyExists = await User.findOne({ email });
+  if (emailAlreadyExists) {
+    throw new CustomError.BadRequestError('Email already exists');
+  }
+  const token = crypto.randomBytes(40).toString('hex');
 
-  // const { email, name, password } = req.body;
+  const user = await User.create({
+    name,
+    email,
+    password,
+    token,
+  });
 
-  // const emailAlreadyExists = await User.findOne({ email });
-  // if (emailAlreadyExists) {
-  //   throw new CustomError.BadRequestError('Email already exists');
-  // }
+  await sendEmail();
 
   res.status(StatusCodes.CREATED).json({
     user: { name: user.name, email: user.email, token },
