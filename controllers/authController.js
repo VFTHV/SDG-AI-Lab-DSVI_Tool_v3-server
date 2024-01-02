@@ -1,27 +1,20 @@
 const { BadRequestError, UnauthenticatedError } = require('../errors');
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
-const sendEmail = require('../utils/sendEmail');
+const { sendVerificationEmail } = require('../utils');
+
 const crypto = require('crypto');
 const CustomError = require('../errors');
 
 const register = async (req, res) => {
   const { email, name, password } = req.body;
-  console.log(Date.now(), ' register user triggered');
+  console.log('register user triggered');
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
     throw new CustomError.BadRequestError('Email already exists');
   }
   const verificationToken = crypto.randomBytes(40).toString('hex');
-
-  try {
-    await sendEmail();
-  } catch (error) {
-    throw new CustomError.ServerError(
-      `Server returned following error: ${error}. Please try again`
-    );
-  }
 
   const user = await User.create({
     name,
@@ -30,13 +23,22 @@ const register = async (req, res) => {
     verificationToken,
   });
 
+  const origin = 'http://localhost:3001';
+
+  await sendVerificationEmail({
+    name: user.name,
+    email: user.email,
+    verificationToken: user.verificationToken,
+    origin,
+  });
+
   res.status(StatusCodes.CREATED).json({
     user: { name: user.name, email: user.email, verificationToken },
   });
 };
 
 const verifyEmail = async (req, res) => {
-  console.log(Date.now(), ' verify email triggered');
+  console.log('verify email triggered');
   const { verificationToken, email } = req.body;
   const user = await User.findOne({ email });
 

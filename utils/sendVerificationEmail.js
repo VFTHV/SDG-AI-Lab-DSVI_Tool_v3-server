@@ -16,3 +16,5 @@ const sendVerificationEmail = async ({
     html: `<h4>Hello ${name}</h4>${message}`,
   });
 };
+
+module.exports = sendVerificationEmail;
