@@ -39,11 +39,14 @@ const register = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   console.log('verify email triggered');
+  console.log(req.body);
   const { verificationToken, email } = req.body;
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new CustomError.UnauthenticatedError('Verification failed');
+    throw new CustomError.UnauthenticatedError(
+      'Verification failed no such user'
+    );
   }
 
   if (user.isVerified) {
@@ -53,9 +56,10 @@ const verifyEmail = async (req, res) => {
   }
 
   if (user.verificationToken !== verificationToken) {
-    throw new CustomError.UnauthenticatedError('Verification failed');
+    throw new CustomError.UnauthenticatedError(
+      'Verification failed. Tokens not matching'
+    );
   }
-  console.log('token verified');
 
   user.isVerified = true;
   user.verified = Date.now();
