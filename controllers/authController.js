@@ -41,6 +41,7 @@ const verifyEmail = async (req, res) => {
   console.log('verify email triggered');
   console.log('verify email triggered');
   console.log('verify email triggered');
+  console.log('verify email triggered');
   console.log(req.body);
   const { verificationToken, email } = req.body;
   const user = await User.findOne({ email });
