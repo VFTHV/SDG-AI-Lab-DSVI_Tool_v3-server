@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // connect to DB functionality
 // connect to DB functionality
+// connect to DB functionality
 
 const connectDB = (url) => {
   return mongoose.connect(url, {
