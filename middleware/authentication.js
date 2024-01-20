@@ -2,6 +2,8 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { UnauthenticatedError } = require('../errors');
 
+// authentication middleware
+
 const auth = async (req, res, next) => {
   // check header
   const authHeader = req.headers.authorization;
