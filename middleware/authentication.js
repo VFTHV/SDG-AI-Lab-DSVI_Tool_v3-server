@@ -7,6 +7,7 @@ const { UnauthenticatedError } = require('../errors');
 // authentication middleware
 // authentication middleware
 // authentication middleware
+// authentication middleware
 
 const auth = async (req, res, next) => {
   // check header
