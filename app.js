@@ -15,13 +15,18 @@ const rateLimiter = require('express-rate-limit');
 const connectDB = require('./db/connect');
 
 const authenticateUser = require('./middleware/authentication');
-// routers
+
+// routes
 const authRouter = require('./routes/authRouter');
+
+// middleware
+const morgan = require('morgan');
 
 // error handlers
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
+app.use(morgan('tiny'));
 app.use(express.json());
 // extra packages
 app.use(cors());
