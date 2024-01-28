@@ -2,7 +2,11 @@ const { BadRequestError, UnauthenticatedError } = require('../errors');
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { sendVerificationEmail } = require('../utils');
-const { attachCookiesToResponse, hashPassword } = require('../utils');
+const {
+  attachCookiesToResponse,
+  hashPassword,
+  isTokenValid,
+} = require('../utils');
 
 const crypto = require('crypto');
 const CustomError = require('../errors');
@@ -71,6 +75,7 @@ const verifyEmail = async (req, res) => {
 };
 
 const login = async (req, res) => {
+  console.log(req.cookies);
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -84,7 +89,6 @@ const login = async (req, res) => {
   }
 
   //  compare password
-
   const isPasswordCorrect = await user.comparePassword(password);
 
   if (!isPasswordCorrect) {
@@ -92,6 +96,7 @@ const login = async (req, res) => {
   }
 
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  console.log(tokenUser);
 
   attachCookiesToResponse({ res, user: tokenUser });
 
@@ -100,4 +105,16 @@ const login = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
-module.exports = { register, login, verifyEmail };
+const authenticateRouting = async (req, res) => {
+  const { token } = req.cookies;
+
+  try {
+    const tokenVerified = isTokenValid({ token });
+    // can attach user: tokenVerified to send() later
+    res.status(StatusCodes.OK).send({ authenticated: true });
+  } catch (error) {
+    res.status(StatusCodes.UNAUTHORIZED).send({ authenticated: false });
+  }
+};
+
+module.exports = { register, login, verifyEmail, authenticateRouting };

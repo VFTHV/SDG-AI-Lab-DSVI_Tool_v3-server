@@ -4,11 +4,13 @@ require('express-async-errors');
 const express = require('express');
 const app = express();
 
-// extra security packages
-const cors = require('cors');
+// rest of the packages
+
 // const helmet = require('helmet');
-const morgan = require('morgan');
 // const xss = require('xss-clean');
+const cors = require('cors');
+const morgan = require('morgan');
+const cookieParser = require('cookie-parser');
 
 // const rateLimiter = require('express-rate-limit');
 
@@ -24,10 +26,18 @@ const authRouter = require('./routes/authRouter');
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
+// extra packages
 app.use(morgan('tiny'));
 app.use(express.json());
-// extra packages
-app.use(cors());
+app.use(cookieParser(process.env.JWT_SECRET));
+
+// options so that DSVI nextJS front-end could receive cookies
+const corsOptions = {
+  origin: 'http://localhost:3001',
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 // routes
 app.use('/api/v1/auth', authRouter);
