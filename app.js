@@ -17,7 +17,7 @@ const cookieParser = require('cookie-parser');
 // database
 const connectDB = require('./db/connect');
 
-const authenticateUser = require('./middleware/authentication');
+// const authenticateUser = require('./middleware/authentication');
 
 // routes
 const authRouter = require('./routes/authRouter');

@@ -70,12 +70,11 @@ const verifyEmail = async (req, res) => {
   user.verificationToken = '';
 
   await user.save();
-  console.log('user save');
+
   res.status(StatusCodes.OK).json({ msg: 'Email Verified' });
 };
 
 const login = async (req, res) => {
-  console.log(req.cookies);
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -96,7 +95,6 @@ const login = async (req, res) => {
   }
 
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
-  console.log(tokenUser);
 
   attachCookiesToResponse({ res, user: tokenUser });
 
@@ -111,10 +109,19 @@ const authenticateRouting = async (req, res) => {
   try {
     const tokenVerified = isTokenValid({ token });
     // can attach user: tokenVerified to send() later
-    res.status(StatusCodes.OK).send({ authenticated: true });
+    res.status(StatusCodes.OK).send({ isAuthenticated: true });
   } catch (error) {
-    res.status(StatusCodes.UNAUTHORIZED).send({ authenticated: false });
+    res.status(StatusCodes.UNAUTHORIZED).send({ isAuthenticated: false });
   }
 };
 
-module.exports = { register, login, verifyEmail, authenticateRouting };
+const logout = async (req, res) => {
+  res.cookie('token', 'logout', {
+    httpOnly: true,
+    expires: new Date(Date.now() + 10 * 1000),
+  });
+
+  res.status(StatusCodes.OK).send({ msg: 'User logged out' });
+};
+
+module.exports = { register, login, verifyEmail, authenticateRouting, logout };
