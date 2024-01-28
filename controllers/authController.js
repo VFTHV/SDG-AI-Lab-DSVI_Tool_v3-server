@@ -2,13 +2,13 @@ const { BadRequestError, UnauthenticatedError } = require('../errors');
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { sendVerificationEmail } = require('../utils');
+const { attachCookiesToResponse, hashPassword } = require('../utils');
 
 const crypto = require('crypto');
 const CustomError = require('../errors');
 
 const register = async (req, res) => {
   const { email, name, password } = req.body;
-  console.log('register user triggered');
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
@@ -16,10 +16,12 @@ const register = async (req, res) => {
   }
   const verificationToken = crypto.randomBytes(40).toString('hex');
 
+  const hashedPassword = await hashPassword(password);
+
   const user = await User.create({
     name,
     email,
-    password,
+    password: hashedPassword,
     verificationToken,
   });
 
@@ -38,8 +40,6 @@ const register = async (req, res) => {
 };
 
 const verifyEmail = async (req, res) => {
-  console.log('verify email triggered');
-
   const { verificationToken, email } = req.body;
   const user = await User.findOne({ email });
 
@@ -57,7 +57,7 @@ const verifyEmail = async (req, res) => {
 
   if (user.verificationToken !== verificationToken) {
     throw new CustomError.UnauthenticatedError(
-      'Verification failed. Tokens not matching'
+      'Verification failed. Tokens do not match'
     );
   }
 
@@ -71,7 +71,6 @@ const verifyEmail = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  console.log('login user triggered');
   const { email, password } = req.body;
 
   if (!email || !password) {
@@ -85,16 +84,20 @@ const login = async (req, res) => {
   }
 
   //  compare password
+
   const isPasswordCorrect = await user.comparePassword(password);
+
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError('Invalid Credentials');
   }
 
-  const token = user.createJWT();
+  const tokenUser = { name: user.name, userId: user._id, role: user.role };
 
-  res
-    .status(StatusCodes.OK)
-    .json({ user: { name: user.name, email: user.email, token } });
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  // const token = user.createJWT();
+
+  res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
 module.exports = { register, login, verifyEmail };

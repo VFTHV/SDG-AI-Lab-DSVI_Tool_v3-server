@@ -6,21 +6,19 @@ const app = express();
 
 // extra security packages
 const cors = require('cors');
-const helmet = require('helmet');
+// const helmet = require('helmet');
+const morgan = require('morgan');
 // const xss = require('xss-clean');
 
-const rateLimiter = require('express-rate-limit');
+// const rateLimiter = require('express-rate-limit');
 
-// connectDB
+// database
 const connectDB = require('./db/connect');
 
 const authenticateUser = require('./middleware/authentication');
 
 // routes
 const authRouter = require('./routes/authRouter');
-
-// middleware
-const morgan = require('morgan');
 
 // error handlers
 const notFoundMiddleware = require('./middleware/not-found');
