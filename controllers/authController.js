@@ -41,7 +41,11 @@ const register = async (req, res) => {
   });
 
   res.status(StatusCodes.CREATED).json({
-    user: { name: user.name, email: user.email, verificationToken },
+    user: {
+      name: user.name,
+      userId: user._id,
+      role: user.role /*, verificationToken*/,
+    },
   });
 };
 
@@ -94,6 +98,12 @@ const login = async (req, res) => {
 
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError('Invalid Credentials');
+  }
+
+  const isTokenVerified = user.isVerified;
+
+  if (!isTokenVerified) {
+    throw new UnauthenticatedError('Please verify your email');
   }
 
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
