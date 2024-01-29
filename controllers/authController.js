@@ -16,7 +16,9 @@ const register = async (req, res) => {
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
-    throw new CustomError.BadRequestError('Email already exists');
+    throw new CustomError.BadRequestError(
+      'Account with this email already exists'
+    );
   }
   const verificationToken = crypto.randomBytes(40).toString('hex');
 
