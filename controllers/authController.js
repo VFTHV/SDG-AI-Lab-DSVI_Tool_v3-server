@@ -138,11 +138,6 @@ const logout = async (req, res) => {
 
 const updateUser = async (req, res) => {
   // updating password here
-  // updating password here
-  // updating password here
-  // updating password here
-  // updating password here
-  // updating password here
 };
 
 module.exports = { register, login, verifyEmail, authenticateRouting, logout };
