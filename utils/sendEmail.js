@@ -11,6 +11,7 @@ const sendEmail = async ({ to, subject, html }) => {
   // nodemailer config
   // nodemailer config
   // nodemailer config
+  // nodemailer config
 
   const info = await transporter.sendMail({
     from: '"VFTHV" <sdgadmin@gmail.com>', // sender address
