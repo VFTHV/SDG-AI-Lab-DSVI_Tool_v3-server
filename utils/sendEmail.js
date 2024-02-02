@@ -6,6 +6,7 @@ const sendEmail = async ({ to, subject, html }) => {
   let testAccount = await nodemailer.createTestAccount();
 
   const transporter = nodemailer.createTransport(nodemailerConfig);
+  // nodemailer config
 
   const info = await transporter.sendMail({
     from: '"VFTHV" <sdgadmin@gmail.com>', // sender address
@@ -14,6 +15,7 @@ const sendEmail = async ({ to, subject, html }) => {
     html,
     // text: 'SDG back end?', // plain text body
   });
+  console.log('info: ', info);
 };
 
 module.exports = sendEmail;
