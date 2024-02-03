@@ -14,7 +14,6 @@ const sendEmail = async ({ to, subject, html }) => {
     html,
     // text: 'SDG back end?', // plain text body
   });
-  console.log('info: ', info);
 };
 
 module.exports = sendEmail;
