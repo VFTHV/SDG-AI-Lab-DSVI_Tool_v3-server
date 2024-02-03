@@ -3,7 +3,7 @@ const { isTokenValid } = require('../utils');
 const { StatusCodes } = require('http-status-codes');
 
 const authenticateUser = async (req, res, next) => {
-  const { token } = req.cookies;
+  const { token } = req.signedCookies;
 
   if (!token) {
     throw new CustomError.UnauthenticatedError('Authentication Invalid');

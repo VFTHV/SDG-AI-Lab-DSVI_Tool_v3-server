@@ -2,11 +2,7 @@ const { BadRequestError, UnauthenticatedError } = require('../errors');
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { sendVerificationEmail } = require('../utils');
-const {
-  attachCookiesToResponse,
-  hashPassword,
-  isTokenValid,
-} = require('../utils');
+const { attachCookiesToResponse, hashPassword } = require('../utils');
 
 const crypto = require('crypto');
 const CustomError = require('../errors');
