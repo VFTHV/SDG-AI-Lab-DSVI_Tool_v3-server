@@ -116,15 +116,21 @@ const login = async (req, res) => {
 };
 
 const authenticateRouting = async (req, res) => {
-  const { token } = req.cookies;
+  // const { token } = req.cookies;
 
-  try {
-    const tokenVerified = isTokenValid({ token });
-    // can attach user: tokenVerified to send() later
+  if (req.user) {
     res.status(StatusCodes.OK).send({ isAuthenticated: true });
-  } catch (error) {
+  } else {
     res.status(StatusCodes.UNAUTHORIZED).send({ isAuthenticated: false });
   }
+
+  // try {
+  //   const tokenVerified = isTokenValid({ token });
+  //   // can attach user: tokenVerified to send() later
+  //   res.status(StatusCodes.OK).send({ isAuthenticated: true });
+  // } catch (error) {
+  //   res.status(StatusCodes.UNAUTHORIZED).send({ isAuthenticated: false });
+  // }
 };
 
 const logout = async (req, res) => {

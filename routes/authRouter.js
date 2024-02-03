@@ -7,11 +7,20 @@ const {
   authenticateRouting,
   logout,
 } = require('../controllers/authController');
+const {
+  authenticateUser,
+  authorizePermissions,
+} = require('../middleware/authentication');
 
 router.post('/register', register);
 router.post('/login', login);
 router.post('/verify-email', verifyEmail);
-router.get('/routing', /*add authorizePermissions here */ authenticateRouting);
+router.get(
+  '/routing',
+  authenticateUser,
+  authorizePermissions('user'),
+  authenticateRouting
+);
 router.get('/logout', logout);
 
 module.exports = router;
