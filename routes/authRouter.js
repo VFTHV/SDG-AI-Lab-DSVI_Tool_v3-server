@@ -4,7 +4,6 @@ const {
   register,
   login,
   verifyEmail,
-  authenticateRouting,
   logout,
 } = require('../controllers/authController');
 const {
@@ -15,12 +14,7 @@ const {
 router.post('/register', register);
 router.post('/login', login);
 router.post('/verify-email', verifyEmail);
-router.get(
-  '/routing',
-  authenticateUser,
-  authorizePermissions('user'),
-  authenticateRouting
-);
+router.get('/routing', authenticateUser, authorizePermissions('user'));
 router.get('/logout', logout);
 
 module.exports = router;

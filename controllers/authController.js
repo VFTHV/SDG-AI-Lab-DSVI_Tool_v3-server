@@ -117,13 +117,6 @@ const login = async (req, res) => {
 
 const authenticateRouting = async (req, res) => {
   // const { token } = req.cookies;
-
-  if (req.user) {
-    res.status(StatusCodes.OK).send({ isAuthenticated: true });
-  } else {
-    res.status(StatusCodes.UNAUTHORIZED).send({ isAuthenticated: false });
-  }
-
   // try {
   //   const tokenVerified = isTokenValid({ token });
   //   // can attach user: tokenVerified to send() later
@@ -146,4 +139,4 @@ const updateUser = async (req, res) => {
   // updating password here
 };
 
-module.exports = { register, login, verifyEmail, authenticateRouting, logout };
+module.exports = { register, login, verifyEmail, logout };

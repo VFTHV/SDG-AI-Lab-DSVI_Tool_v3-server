@@ -1,5 +1,6 @@
 const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
+const { StatusCodes } = require('http-status-codes');
 
 const authenticateUser = async (req, res, next) => {
   const { token } = req.cookies;
@@ -24,7 +25,8 @@ const authorizePermissions = (...roles) => {
         'Unauthorized to access this route'
       );
     }
-    next();
+    res.status(StatusCodes.OK).send({ isAuthenticated: true });
+    // next();
   };
 };
 
