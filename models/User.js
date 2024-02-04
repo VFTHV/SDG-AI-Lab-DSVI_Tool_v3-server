@@ -2,6 +2,17 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const allowedCountries = ['Tajikistan', 'Niger', 'Burkina Faso'];
+
+const countryValidator = (countries) => {
+  console.log('checking country validation');
+  return (
+    Array.isArray(countries) &&
+    countries.length &&
+    countries.every((country) => allowedCountries.includes(country))
+  );
+};
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -27,6 +38,14 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['admin', 'user'],
     default: 'user',
+  },
+  countries: {
+    type: [String],
+    required: true,
+    validate: {
+      validator: countryValidator,
+      message: 'Please choose allowed countries',
+    },
   },
   verificationToken: String,
   isVerified: {

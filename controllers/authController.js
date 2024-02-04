@@ -8,7 +8,7 @@ const crypto = require('crypto');
 const CustomError = require('../errors');
 
 const register = async (req, res) => {
-  const { email, name, password } = req.body;
+  const { email, name, password, countries } = req.body;
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
@@ -16,19 +16,23 @@ const register = async (req, res) => {
       'Account with this email already exists'
     );
   }
+
+  // if (!countries ||(Array.isArray(countries) && !countries.length) ) {
+  //   throw new CustomError.BadRequestError('Please provide coutries')
+  // }
+
   const verificationToken = crypto.randomBytes(40).toString('hex');
 
   const hashedPassword = await hashPassword(password);
-
   const user = await User.create({
     name,
     email,
     password: hashedPassword,
+    countries,
     verificationToken,
   });
 
   const origin = 'http://localhost:3001';
-
   await sendVerificationEmail({
     name: user.name,
     email: user.email,
