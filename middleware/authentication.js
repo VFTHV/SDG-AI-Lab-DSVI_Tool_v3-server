@@ -4,9 +4,13 @@ const { StatusCodes } = require('http-status-codes');
 
 const authenticateUser = async (req, res, next) => {
   const { token } = req.signedCookies;
+  // extend cookies validity when this runs
+  // it means person uses app
 
   if (!token) {
-    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+    throw new CustomError.UnauthenticatedError(
+      'Authentication Invalid. Please login'
+    );
   }
 
   try {
@@ -14,7 +18,9 @@ const authenticateUser = async (req, res, next) => {
     req.user = { name, userId, role };
     next();
   } catch (error) {
-    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+    throw new CustomError.UnauthenticatedError(
+      'Authentication Invalid. Please login'
+    );
   }
 };
 
@@ -25,8 +31,7 @@ const authorizePermissions = (...roles) => {
         'Unauthorized to access this route'
       );
     }
-    res.status(StatusCodes.OK).send({ isAuthenticated: true });
-    // next();
+    next();
   };
 };
 

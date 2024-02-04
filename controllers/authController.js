@@ -84,42 +84,27 @@ const login = async (req, res) => {
   }
 
   const user = await User.findOne({ email });
-
   if (!user) {
     throw new UnauthenticatedError('Invalid Credentials');
   }
 
   //  compare password
   const isPasswordCorrect = await user.comparePassword(password);
-
   if (!isPasswordCorrect) {
     throw new UnauthenticatedError('Invalid Credentials');
   }
 
   const isTokenVerified = user.isVerified;
-
   if (!isTokenVerified) {
     throw new UnauthenticatedError('Please verify your email');
   }
 
   const tokenUser = { name: user.name, userId: user._id, role: user.role };
-
   attachCookiesToResponse({ res, user: tokenUser });
 
   // const token = user.createJWT();
 
   res.status(StatusCodes.OK).json({ user: tokenUser });
-};
-
-const authenticateRouting = async (req, res) => {
-  // const { token } = req.cookies;
-  // try {
-  //   const tokenVerified = isTokenValid({ token });
-  //   // can attach user: tokenVerified to send() later
-  //   res.status(StatusCodes.OK).send({ isAuthenticated: true });
-  // } catch (error) {
-  //   res.status(StatusCodes.UNAUTHORIZED).send({ isAuthenticated: false });
-  // }
 };
 
 const logout = async (req, res) => {
@@ -131,8 +116,42 @@ const logout = async (req, res) => {
   res.status(StatusCodes.OK).send({ msg: 'User logged out' });
 };
 
+const showCurrentUser = async (req, res) => {
+  res.status(StatusCodes.OK).json({ user: req.user });
+};
+
+const updateUserPassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!oldPassword || !newPassword) {
+    throw new CustomError.BadRequestError('Please provide both values');
+  }
+
+  const user = await User.findOne({ _id: req.user.userId });
+
+  const isPasswordCorrect = await user.comparePassword(oldPassword);
+  if (!isPasswordCorrect) {
+    throw new CustomError.UnauthenticatedError(
+      'Please provide correct Old Password'
+    );
+  }
+  const hashedPassword = await hashPassword(newPassword);
+  user.password = hashedPassword;
+  await user.save();
+  // cannot use previously used old passwords
+  // new password cannot be same as current
+  res.status(StatusCodes.OK).json({ msg: 'Password Updated' });
+};
+
 const updateUser = async (req, res) => {
   // updating password here
 };
 
-module.exports = { register, login, verifyEmail, logout };
+module.exports = {
+  register,
+  login,
+  verifyEmail,
+  logout,
+  showCurrentUser,
+  updateUserPassword,
+};

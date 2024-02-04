@@ -5,6 +5,8 @@ const {
   login,
   verifyEmail,
   logout,
+  showCurrentUser,
+  updateUserPassword,
 } = require('../controllers/authController');
 const {
   authenticateUser,
@@ -14,7 +16,8 @@ const {
 router.post('/register', register);
 router.post('/login', login);
 router.post('/verify-email', verifyEmail);
-router.get('/routing', authenticateUser, authorizePermissions('user'));
 router.get('/logout', logout);
+router.get('/routing', authenticateUser, showCurrentUser);
+router.patch('/updateUserPassword', authenticateUser, updateUserPassword);
 
 module.exports = router;
