@@ -17,10 +17,6 @@ const register = async (req, res) => {
     );
   }
 
-  // if (!countries ||(Array.isArray(countries) && !countries.length) ) {
-  //   throw new CustomError.BadRequestError('Please provide coutries')
-  // }
-
   const verificationToken = crypto.randomBytes(40).toString('hex');
 
   const hashedPassword = await hashPassword(password);
@@ -103,7 +99,12 @@ const login = async (req, res) => {
     throw new UnauthenticatedError('Please verify your email');
   }
 
-  const tokenUser = { name: user.name, userId: user._id, role: user.role };
+  const tokenUser = {
+    name: user.name,
+    userId: user._id,
+    role: user.role,
+    countries: user.countries,
+  };
   attachCookiesToResponse({ res, user: tokenUser });
 
   // const token = user.createJWT();
