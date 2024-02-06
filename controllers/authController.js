@@ -151,7 +151,7 @@ const updateUserPassword = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  // updating password here
+  // updating user details here
 };
 
 module.exports = {
