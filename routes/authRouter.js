@@ -13,7 +13,12 @@ const {
   authorizePermissions,
 } = require('../middleware/authentication');
 
-router.post('/register', /*authorizePermissions('admin'),*/ register);
+router.post(
+  '/register',
+  authenticateUser,
+  authorizePermissions('admin'),
+  register
+);
 router.post('/login', login);
 router.post('/verify-email', verifyEmail);
 router.get('/logout', logout);

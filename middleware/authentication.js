@@ -1,6 +1,5 @@
 const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
-const { StatusCodes } = require('http-status-codes');
 
 const authenticateUser = async (req, res, next) => {
   const { token } = req.signedCookies;

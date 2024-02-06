@@ -8,7 +8,8 @@ const crypto = require('crypto');
 const CustomError = require('../errors');
 
 const register = async (req, res) => {
-  const { email, name, password, countries } = req.body;
+  const { email, name, password, countries, role } = req.body;
+  console.log(req.body);
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
@@ -25,6 +26,7 @@ const register = async (req, res) => {
     email,
     password: hashedPassword,
     countries,
+    role,
     verificationToken,
   });
 

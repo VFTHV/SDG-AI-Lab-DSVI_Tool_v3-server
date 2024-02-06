@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const allowedCountries = ['Tajikistan', 'Niger', 'Burkina Faso'];
 
 const countryValidator = (countries) => {
-  console.log('checking country validation');
   return (
     Array.isArray(countries) &&
     countries.length &&
