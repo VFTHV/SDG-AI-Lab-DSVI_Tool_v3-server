@@ -154,6 +154,8 @@ const updateUser = async (req, res) => {
   // updating user details here
 };
 
+// admin page
+
 module.exports = {
   register,
   login,
