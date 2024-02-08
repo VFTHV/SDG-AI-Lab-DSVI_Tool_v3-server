@@ -158,6 +158,7 @@ const updateUser = async (req, res) => {
 // admin page
 // admin page
 // admin page
+// admin page
 
 module.exports = {
   register,
