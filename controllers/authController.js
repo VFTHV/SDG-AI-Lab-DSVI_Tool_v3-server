@@ -170,4 +170,5 @@ module.exports = {
   logout,
   showCurrentUser,
   updateUserPassword,
+  getAllUsers,
 };
