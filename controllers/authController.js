@@ -159,6 +159,7 @@ const deleteUser = async (req, res) => {
   // deleting user here
   // deleting user here
   // deleting user here
+  // deleting user here
 };
 
 module.exports = {
