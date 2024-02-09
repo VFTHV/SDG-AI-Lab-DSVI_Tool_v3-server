@@ -157,7 +157,8 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  const { email } = req.params;
+  console.log(req.user);
+  const { email } = req.query;
 
   if (!email) {
     throw new CustomError.BadRequestError('Please provide user email');

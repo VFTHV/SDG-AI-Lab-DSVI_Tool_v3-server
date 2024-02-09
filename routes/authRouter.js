@@ -8,6 +8,7 @@ const {
   showCurrentUser,
   updateUserPassword,
   getAllUsers,
+  getSingleUser,
 } = require('../controllers/authController');
 const {
   authenticateUser,
@@ -29,7 +30,14 @@ router.get(
   '/get-all-users',
   authenticateUser,
   authorizePermissions('admin'),
-  getAllUsers
+  getAllUsers,
+  getSingleUser
+);
+router.get(
+  '/user',
+  authenticateUser,
+  authorizePermissions('admin'),
+  getSingleUser
 );
 
 module.exports = router;
