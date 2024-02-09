@@ -153,6 +153,9 @@ const updateUserPassword = async (req, res) => {
 const updateUser = async (req, res) => {
   // updating user details here
 };
+const deleteUser = async (req, res) => {
+  // deleting user here
+};
 
 module.exports = {
   register,
