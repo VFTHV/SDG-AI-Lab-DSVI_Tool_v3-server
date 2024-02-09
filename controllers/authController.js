@@ -156,6 +156,23 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).send({ users });
 };
 
+const getSingleUser = async (req, res) => {
+  const { email } = req.params;
+
+  if (!email) {
+    throw new CustomError.BadRequestError('Please provide user email');
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new CustomError.NotFoundError(
+      `User with email ${email} was not found`
+    );
+  }
+
+  res.status(StatusCodes.OK).send({ user });
+};
+
 const updateUser = async (req, res) => {
   // updating user details here
 };
@@ -171,4 +188,5 @@ module.exports = {
   showCurrentUser,
   updateUserPassword,
   getAllUsers,
+  getSingleUser,
 };
