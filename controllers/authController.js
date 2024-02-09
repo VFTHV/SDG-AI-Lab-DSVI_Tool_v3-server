@@ -3,6 +3,7 @@ const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { sendVerificationEmail } = require('../utils');
 const { attachCookiesToResponse, hashPassword } = require('../utils');
+const validator = require('validator');
 
 const crypto = require('crypto');
 const CustomError = require('../errors');
@@ -162,6 +163,13 @@ const getSingleUser = async (req, res) => {
 
   if (!email) {
     throw new CustomError.BadRequestError('Please provide user email');
+  }
+
+  const isEmail = validator.isEmail(email);
+  if (!isEmail) {
+    throw new CustomError.BadRequestError(
+      `Please provide correct email syntax`
+    );
   }
 
   const user = await User.findOne({ email });
