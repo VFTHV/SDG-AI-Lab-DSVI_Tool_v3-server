@@ -150,6 +150,12 @@ const updateUserPassword = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Password Updated' });
 };
 
+const getAllUsers = async (req, res) => {
+  const users = await User.find().select('-password');
+  // attach pagination here
+  res.status(StatusCodes.OK).send({ users });
+};
+
 const updateUser = async (req, res) => {
   // updating user details here
 };
