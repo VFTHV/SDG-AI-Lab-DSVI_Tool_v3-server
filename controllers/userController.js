@@ -59,7 +59,21 @@ const updateUser = async (req, res) => {
   // updating user details here
 };
 const deleteUser = async (req, res) => {
-  // deleting user here
+  const { _id } = req.body;
+
+  const user = await User.findOne({ _id });
+
+  if (!user) {
+    throw new CustomError.NotFoundError('Could not find user');
+  }
+
+  try {
+    await User.findByIdAndDelete(_id);
+    res.sendStatus(StatusCodes.NO_CONTENT);
+  } catch (error) {
+    console.log('deleteUser error: ', error);
+    throw new CustomError.ServerError('Internal Server Error');
+  }
 };
 
 const updateUserAdmin = async (req, res) => {
@@ -94,4 +108,5 @@ module.exports = {
   getAllUsers,
   getSingleUser,
   updateUserAdmin,
+  deleteUser,
 };

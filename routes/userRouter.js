@@ -6,6 +6,7 @@ const {
   getAllUsers,
   getSingleUser,
   updateUserAdmin,
+  deleteUser,
 } = require('../controllers/userController');
 
 const {
@@ -30,6 +31,13 @@ router.post(
   authenticateUser,
   authorizePermissions('admin'),
   updateUserAdmin
+);
+
+router.delete(
+  '/delete-user',
+  authenticateUser,
+  authorizePermissions('admin'),
+  deleteUser
 );
 
 module.exports = router;
