@@ -1,9 +1,7 @@
-const { BadRequestError, UnauthenticatedError } = require('../errors');
 const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const { sendVerificationEmail } = require('../utils');
 const { attachCookiesToResponse, hashPassword } = require('../utils');
-const validator = require('validator');
 
 const crypto = require('crypto');
 const CustomError = require('../errors');
@@ -83,23 +81,23 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    throw new BadRequestError('Please provide email and password');
+    throw new CustomError.BadRequestError('Please provide email and password');
   }
 
   const user = await User.findOne({ email });
   if (!user) {
-    throw new UnauthenticatedError('Invalid Credentials');
+    throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
 
   //  compare password
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new UnauthenticatedError('Invalid Credentials');
+    throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
 
   const isTokenVerified = user.isVerified;
   if (!isTokenVerified) {
-    throw new UnauthenticatedError('Please verify your email');
+    throw new CustomError.UnauthenticatedError('Please verify your email');
   }
 
   const tokenUser = {
@@ -128,74 +126,10 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 
-const updateUserPassword = async (req, res) => {
-  const { oldPassword, newPassword } = req.body;
-
-  if (!oldPassword || !newPassword) {
-    throw new CustomError.BadRequestError('Please provide both values');
-  }
-
-  const user = await User.findOne({ _id: req.user.userId });
-
-  const isPasswordCorrect = await user.comparePassword(oldPassword);
-  if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError(
-      'Please provide correct Old Password'
-    );
-  }
-  const hashedPassword = await hashPassword(newPassword);
-  user.password = hashedPassword;
-  await user.save();
-  // cannot use previously used old passwords
-  // new password cannot be same as current
-  res.status(StatusCodes.OK).json({ msg: 'Password Updated' });
-};
-
-const getAllUsers = async (req, res) => {
-  const users = await User.find().select('-password');
-  // attach pagination here
-  res.status(StatusCodes.OK).send({ users });
-};
-
-const getSingleUser = async (req, res) => {
-  console.log(req.user);
-  const { email } = req.query;
-
-  if (!email) {
-    throw new CustomError.BadRequestError('Please provide user email');
-  }
-
-  const isEmail = validator.isEmail(email);
-  if (!isEmail) {
-    throw new CustomError.BadRequestError(
-      `Please provide correct email syntax`
-    );
-  }
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new CustomError.NotFoundError(
-      `User with email ${email} was not found`
-    );
-  }
-
-  res.status(StatusCodes.OK).send({ user });
-};
-
-const updateUser = async (req, res) => {
-  // updating user details here
-};
-const deleteUser = async (req, res) => {
-  // deleting user here
-};
-
 module.exports = {
   register,
   login,
   verifyEmail,
   logout,
   showCurrentUser,
-  updateUserPassword,
-  getAllUsers,
-  getSingleUser,
 };
