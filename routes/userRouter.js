@@ -5,6 +5,7 @@ const {
   updateUserPassword,
   getAllUsers,
   getSingleUser,
+  updateUserAdmin,
 } = require('../controllers/userController');
 
 const {
@@ -12,7 +13,7 @@ const {
   authorizePermissions,
 } = require('../middleware/authentication');
 
-router.patch('/updateUserPassword', authenticateUser, updateUserPassword);
+router.get('/', authenticateUser, authorizePermissions('admin'), getSingleUser);
 
 router.get(
   '/get-all-users',
@@ -22,6 +23,13 @@ router.get(
   getSingleUser
 );
 
-router.get('/', authenticateUser, authorizePermissions('admin'), getSingleUser);
+router.patch('/updateUserPassword', authenticateUser, updateUserPassword);
+
+router.post(
+  '/update-user-admin',
+  authenticateUser,
+  authorizePermissions('admin'),
+  updateUserAdmin
+);
 
 module.exports = router;

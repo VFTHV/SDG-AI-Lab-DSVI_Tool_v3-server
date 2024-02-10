@@ -4,6 +4,34 @@ const { StatusCodes } = require('http-status-codes');
 const { hashPassword } = require('../utils');
 const validator = require('validator');
 
+const getAllUsers = async (req, res) => {
+  const users = await User.find().select('-password');
+  // attach pagination here
+  res.status(StatusCodes.OK).send({ users });
+};
+
+const getSingleUser = async (req, res) => {
+  const { email } = req.query;
+
+  if (!email) {
+    throw new CustomError.BadRequestError('Please provide user email');
+  }
+
+  const isEmail = validator.isEmail(email);
+  if (!isEmail) {
+    throw new CustomError.BadRequestError(`Invalid Email Format`);
+  }
+
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new CustomError.NotFoundError(
+      `User with email ${email} was not found`
+    );
+  }
+
+  res.status(StatusCodes.OK).send({ user });
+};
+
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
@@ -27,36 +55,6 @@ const updateUserPassword = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Password Updated' });
 };
 
-const getAllUsers = async (req, res) => {
-  const users = await User.find().select('-password');
-  // attach pagination here
-  res.status(StatusCodes.OK).send({ users });
-};
-
-const getSingleUser = async (req, res) => {
-  const { email } = req.query;
-
-  if (!email) {
-    throw new CustomError.BadRequestError('Please provide user email');
-  }
-
-  const isEmail = validator.isEmail(email);
-  if (!isEmail) {
-    throw new CustomError.BadRequestError(
-      `Please provide correct email syntax`
-    );
-  }
-
-  const user = await User.findOne({ email });
-  if (!user) {
-    throw new CustomError.NotFoundError(
-      `User with email ${email} was not found`
-    );
-  }
-
-  res.status(StatusCodes.OK).send({ user });
-};
-
 const updateUser = async (req, res) => {
   // updating user details here
 };
@@ -64,8 +62,36 @@ const deleteUser = async (req, res) => {
   // deleting user here
 };
 
+const updateUserAdmin = async (req, res) => {
+  const { password, _id, ...otherProps } = req.body;
+
+  try {
+    const user = await User.findOne({ _id });
+
+    if (password) {
+      console.log('updating password with: ', password);
+      const hashedPassword = await hashPassword(password);
+      user.password = hashedPassword;
+    }
+
+    // assigning the rest of properties
+    for (prop in otherProps) {
+      if (Object.prototype.hasOwnProperty.call(otherProps, prop)) {
+        user[prop] = otherProps[prop];
+      }
+    }
+
+    await user.save();
+    res.status(StatusCodes.OK).json({ msg: 'User updated successfully', user });
+  } catch (error) {
+    console.log('Error in updateUserAdmin: ', error);
+    throw new CustomError.ServerError('Internal Server Error');
+  }
+};
+
 module.exports = {
   updateUserPassword,
   getAllUsers,
   getSingleUser,
+  updateUserAdmin,
 };
