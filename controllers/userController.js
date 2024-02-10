@@ -1,6 +1,8 @@
 const User = require('../models/User');
+const CustomError = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const { hashPassword } = require('../utils');
+const validator = require('validator');
 
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
@@ -32,7 +34,6 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  console.log(req.user);
   const { email } = req.query;
 
   if (!email) {

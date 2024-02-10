@@ -22,11 +22,6 @@ router.get(
   getSingleUser
 );
 
-router.get(
-  '/user',
-  authenticateUser,
-  authorizePermissions('admin'),
-  getSingleUser
-);
+router.get('/', authenticateUser, authorizePermissions('admin'), getSingleUser);
 
 module.exports = router;
