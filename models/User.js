@@ -71,4 +71,6 @@ UserSchema.methods.createJWT = function () {
   );
 };
 
+// add the 'save' hook with this.isModified('password') return
+
 module.exports = mongoose.model('User', UserSchema);
