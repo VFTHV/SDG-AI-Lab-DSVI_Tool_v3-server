@@ -24,7 +24,7 @@ router.get(
   getSingleUser
 );
 
-router.patch('/updateUserPassword', authenticateUser, updateUserPassword);
+router.patch('/update-user-password', authenticateUser, updateUserPassword);
 
 router.post(
   '/update-user-admin',

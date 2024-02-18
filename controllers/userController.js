@@ -39,6 +39,10 @@ const updateUserPassword = async (req, res) => {
     throw new CustomError.BadRequestError('Please provide both values');
   }
 
+  if (oldPassword === newPassword) {
+    throw new CustomError.BadRequestError('You cannot use previous password');
+  }
+
   const user = await User.findOne({ _id: req.user.userId });
 
   const isPasswordCorrect = await user.comparePassword(oldPassword);
@@ -47,17 +51,17 @@ const updateUserPassword = async (req, res) => {
       'Please provide correct Old Password'
     );
   }
-  const hashedPassword = await hashPassword(newPassword);
-  user.password = hashedPassword;
+
+  user.password = newPassword;
   await user.save();
-  // cannot use previously used old passwords
-  // new password cannot be same as current
+
   res.status(StatusCodes.OK).json({ msg: 'Password Updated' });
 };
 
 const updateUser = async (req, res) => {
   // updating user details here
 };
+
 const deleteUser = async (req, res) => {
   const { _id } = req.body;
 

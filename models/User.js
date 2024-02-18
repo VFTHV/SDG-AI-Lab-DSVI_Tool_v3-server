@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please provide name'],
+    // trim: true,
     minlength: 3,
     maxlength: 50,
   },
@@ -31,6 +32,12 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Please provide password'],
+    validate: {
+      validator: function (value) {
+        return value.length >= 6;
+      },
+      message: `Password is shorter than minimum allowed length of 6`,
+    },
     minlength: 6,
   },
   role: {
@@ -72,5 +79,14 @@ UserSchema.methods.createJWT = function () {
 };
 
 // add the 'save' hook with this.isModified('password') return
+
+UserSchema.pre('save', async function () {
+  console.log(this.modifiedPaths());
+
+  if (!this.isModified('password')) return;
+  console.log('modifying password');
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
 
 module.exports = mongoose.model('User', UserSchema);
