@@ -72,6 +72,10 @@ const updateUser = async (req, res) => {
 
   const user = await User.findOne({ _id: req.user.userId });
 
+  if (user.email === email && user.name === name) {
+    throw new CustomError.BadRequestError('You need to provide updated values');
+  }
+
   user.email = email;
   user.name = name;
   await user.save();
@@ -79,7 +83,9 @@ const updateUser = async (req, res) => {
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });
 
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+  res
+    .status(StatusCodes.OK)
+    .json({ user: tokenUser, msg: 'Details updated successfully' });
 };
 
 const deleteUser = async (req, res) => {
