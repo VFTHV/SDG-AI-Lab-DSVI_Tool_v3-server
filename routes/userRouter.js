@@ -7,6 +7,7 @@ const {
   getSingleUser,
   updateUserAdmin,
   deleteUser,
+  updateUser,
 } = require('../controllers/userController');
 
 const {
@@ -25,6 +26,7 @@ router.get(
 );
 
 router.patch('/update-user-password', authenticateUser, updateUserPassword);
+router.patch('/update-user', authenticateUser, updateUser);
 
 router.post(
   '/update-user-admin',

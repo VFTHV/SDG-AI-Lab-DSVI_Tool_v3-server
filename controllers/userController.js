@@ -1,7 +1,11 @@
 const User = require('../models/User');
 const CustomError = require('../errors');
 const { StatusCodes } = require('http-status-codes');
-const { hashPassword } = require('../utils');
+const {
+  hashPassword,
+  createTokenUser,
+  attachCookiesToResponse,
+} = require('../utils');
 const validator = require('validator');
 
 const getAllUsers = async (req, res) => {
@@ -39,6 +43,7 @@ const updateUserPassword = async (req, res) => {
     throw new CustomError.BadRequestError('Please provide both values');
   }
 
+  //  redo this functionality by checking: const isPasswordCorrect = await user.comparePassword(password);
   if (oldPassword === newPassword) {
     throw new CustomError.BadRequestError('You cannot use previous password');
   }
@@ -59,7 +64,22 @@ const updateUserPassword = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-  // updating user details here
+  const { name, email } = req.body;
+
+  if (!name || !email) {
+    throw new CustomError.BadRequestError('Please provide name and email');
+  }
+
+  const user = await User.findOne({ _id: req.user.userId });
+
+  user.email = email;
+  user.name = name;
+  await user.save();
+
+  const tokenUser = createTokenUser(user);
+  attachCookiesToResponse({ res, user: tokenUser });
+
+  res.status(StatusCodes.OK).json({ user: tokenUser });
 };
 
 const deleteUser = async (req, res) => {
@@ -113,4 +133,5 @@ module.exports = {
   getSingleUser,
   updateUserAdmin,
   deleteUser,
+  updateUser,
 };
