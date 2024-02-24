@@ -5,6 +5,7 @@ const authenticateUser = async (req, res, next) => {
   const { token } = req.signedCookies;
   // extend cookies validity when this runs
   // it means person uses app
+  console.log('authenticateUser token: ', token);
   if (!token) {
     throw new CustomError.UnauthenticatedError(
       'Authentication Invalid. Please login'

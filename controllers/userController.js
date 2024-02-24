@@ -63,6 +63,8 @@ const updateUserPassword = async (req, res) => {
   res.status(StatusCodes.OK).json({ msg: 'Password Updated' });
 };
 
+// update user functionality
+
 const updateUser = async (req, res) => {
   const { name, email } = req.body;
 
