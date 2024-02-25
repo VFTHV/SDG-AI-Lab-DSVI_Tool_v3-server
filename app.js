@@ -34,7 +34,11 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // options so that DSVI nextJS front-end could receive cookies
 const corsOptions = {
-  origin: 'http://localhost:3001',
+  origin: [
+    'http://localhost:3001',
+    'https://sdg-ai-lab-versions.vercel.app',
+    'https://sdg-ai-lab.github.io/DSVI_Tool_v3',
+  ],
   credentials: true,
 };
 
