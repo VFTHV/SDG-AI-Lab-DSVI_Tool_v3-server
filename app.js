@@ -48,6 +48,14 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
+app.use((req, res, next) => {
+  res.setHeader(
+    'Access-Control-Allow-Origin',
+    'https://sdg-ai-lab-versions.vercel.app'
+  );
+  next();
+});
+
 // routes
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/user', userRouter);
