@@ -2,12 +2,13 @@ const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
 
 const authenticateUser = async (req, res, next) => {
-  let { token } = req.signedCookies;
+  const { token } = req.signedCookies;
   // extend cookies validity when this runs
   // it means person uses app
-  // console.log('authenticateUser token: ', token);
-  token =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9zaCIsImVtYWlsIjoiam9zaEBnbWFpbC5jb20iLCJ1c2VySWQiOiI2NWMwMWQ4MmViZmY1N2MyYTc2ZTUxNGIiLCJyb2xlIjoiYWRtaW4iLCJjb3VudHJpZXMiOlsiVGFqaWtpc3RhbiJdLCJpYXQiOjE3MDg4MTc5MjQsImV4cCI6MTcxMTQwOTkyNH0.AOdTo-yjfNao43TLRJVSzipeNGX4r3pIdPtuk6o7pZg';
+  console.log('signedCookies: ', req.signedCookies);
+  console.log('cookies: ', req.cookies);
+  // token =
+  //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9zaCIsImVtYWlsIjoiam9zaEBnbWFpbC5jb20iLCJ1c2VySWQiOiI2NWMwMWQ4MmViZmY1N2MyYTc2ZTUxNGIiLCJyb2xlIjoiYWRtaW4iLCJjb3VudHJpZXMiOlsiVGFqaWtpc3RhbiJdLCJpYXQiOjE3MDg4MTc5MjQsImV4cCI6MTcxMTQwOTkyNH0.AOdTo-yjfNao43TLRJVSzipeNGX4r3pIdPtuk6o7pZg';
 
   if (!token) {
     throw new CustomError.UnauthenticatedError(
