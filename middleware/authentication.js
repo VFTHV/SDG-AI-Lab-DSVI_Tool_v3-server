@@ -8,7 +8,6 @@ const authenticateUser = async (req, res, next) => {
   console.log('signedCookies: ', req.signedCookies);
   console.log('cookies: ', req.cookies);
   console.log('origin: ', req.headers.origin);
-  console.log('request object: ', req);
   // token =
   //   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoiSm9zaCIsImVtYWlsIjoiam9zaEBnbWFpbC5jb20iLCJ1c2VySWQiOiI2NWMwMWQ4MmViZmY1N2MyYTc2ZTUxNGIiLCJyb2xlIjoiYWRtaW4iLCJjb3VudHJpZXMiOlsiVGFqaWtpc3RhbiJdLCJpYXQiOjE3MDg4MTc5MjQsImV4cCI6MTcxMTQwOTkyNH0.AOdTo-yjfNao43TLRJVSzipeNGX4r3pIdPtuk6o7pZg';
 
