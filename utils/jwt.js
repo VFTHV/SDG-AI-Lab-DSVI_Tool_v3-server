@@ -13,13 +13,12 @@ const attachCookiesToResponse = ({ res, user }) => {
   console.log('attaching cookies');
   const token = createJWT({ payload: user });
 
-  console.log('attaching cookies');
-
   const oneDay = 1000 * 60 * 60 * 24;
 
   res.cookie('token', token, {
     httpOnly: true,
     expires: new Date(Date.now() + oneDay * 30),
+    // secure: process.env.NODE_ENV === 'production',
     secure: process.env.NODE_ENV === 'production',
     signed: true,
   });
