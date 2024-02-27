@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const connectDB = (url) => {
-  console.log('connecting to DB');
   return mongoose.connect(url, {
     // useNewUrlParser: true,
     // useCreateIndex: true,

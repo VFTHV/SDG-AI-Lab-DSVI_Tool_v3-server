@@ -34,27 +34,11 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // options so that DSVI nextJS front-end could receive cookies
 const corsOptions = {
-  origin: [
-    'http://localhost:3001',
-    'https://sdg-ai-lab-versions.vercel.app',
-    'https://sdg-ai-lab.github.io/DSVI_Tool_v3',
-  ],
+  origin: 'https://sdg-ai-lab-versions.vercel.app',
   credentials: true,
 };
-// const corsOptions = {
-//   origin: 'https://sdg-ai-lab-versions.vercel.app',
-//   credentials: true,
-// };
 
 app.use(cors(corsOptions));
-
-app.use((req, res, next) => {
-  res.setHeader(
-    'Access-Control-Allow-Origin',
-    'https://sdg-ai-lab-versions.vercel.app'
-  );
-  next();
-});
 
 // routes
 app.use('/api/v1/auth', authRouter);
