@@ -16,11 +16,10 @@ const attachCookiesToResponse = ({ res, user }) => {
   const oneDay = 1000 * 60 * 60 * 24;
 
   res.cookie('token', token, {
-    // httpOnly: true,
+    httpOnly: true,
     expires: new Date(Date.now() + oneDay * 30),
-    // secure: process.env.NODE_ENV === 'production',
-    // signed: true,
-    // sameSite: false,
+    secure: process.env.NODE_ENV === 'production',
+    signed: true,
   });
 };
 
