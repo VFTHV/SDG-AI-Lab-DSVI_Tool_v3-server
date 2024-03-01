@@ -38,7 +38,8 @@ const corsOptions = {
   credentials: true,
 };
 
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors());
 
 // routes
 app.use('/api/v1/auth', authRouter);
