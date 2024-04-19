@@ -36,11 +36,11 @@ app.use(cookieParser(process.env.JWT_SECRET));
 const corsOptions = {
   // origin: 'https://sdg-ai-lab-versions.vercel.app',
   // origin: 'http://localhost:3001',
-  origin: 'https://www.sdgailab-dsvi.com/landing',
+  origin: 'https://www.sdgailab-dsvi.com/',
   credentials: true,
 };
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 // routes
 app.use('/api/v1/auth', authRouter);
