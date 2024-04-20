@@ -8,6 +8,7 @@ const authenticateUser = async (req, res, next) => {
   console.log('signedCookies: ', req.signedCookies);
   console.log('cookies: ', req.cookies);
   console.log('origin: ', req.headers.origin);
+  console.log('request headers: ', req.headers);
 
   if (!token) {
     throw new CustomError.UnauthenticatedError(
