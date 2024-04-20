@@ -22,7 +22,6 @@ const attachCookiesToResponse = ({ res, user }) => {
     secure: true,
     signed: true,
     sameSite: 'strict',
-    domain: 'sdgailab-dsvi.com',
   });
 };
 
