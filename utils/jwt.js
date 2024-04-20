@@ -20,7 +20,8 @@ const attachCookiesToResponse = ({ res, user }) => {
     expires: new Date(Date.now() + oneDay * 30),
     secure: process.env.NODE_ENV === 'production',
     signed: true,
-    domain: 'sdg-ai-lab-versions.vercel.app',
+    sameSite: 'strict',
+    domain: 'sdgailab-dsvi.com',
   });
 };
 
