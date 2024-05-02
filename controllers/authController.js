@@ -4,6 +4,7 @@ const CustomError = require('../errors');
 const { sendVerificationEmail } = require('../utils');
 const { attachCookiesToResponse, hashPassword } = require('../utils');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
   const { email, name, password, countries, role } = req.body;
@@ -108,9 +109,11 @@ const login = async (req, res) => {
   };
   attachCookiesToResponse({ res, user: tokenUser });
 
-  // const token = user.createJWT();
+  const token = jwt.sign(tokenUser, proces.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_LIFETIME,
+  });
 
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+  res.status(StatusCodes.OK).json({ user: tokenUser, token });
 };
 
 const logout = async (req, res) => {
