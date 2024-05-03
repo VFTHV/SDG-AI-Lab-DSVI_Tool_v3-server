@@ -29,7 +29,7 @@ const register = async (req, res) => {
     verificationToken,
   });
 
-  const origin = 'http://localhost:3001';
+  const origin = 'https://www.sdgailab-dsvi.com/';
   await sendVerificationEmail({
     name: user.name,
     email: user.email,

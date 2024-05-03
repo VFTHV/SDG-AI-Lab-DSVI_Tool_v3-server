@@ -91,8 +91,8 @@ const updateUser = async (req, res) => {
 };
 
 const deleteUser = async (req, res) => {
-  const { _id } = req.body;
-
+  const { id: _id } = req.query;
+  console.log(req.query.id);
   const user = await User.findOne({ _id });
 
   if (!user) {

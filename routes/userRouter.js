@@ -21,8 +21,8 @@ router.get(
   '/get-all-users',
   authenticateUser,
   authorizePermissions('admin'),
-  getAllUsers,
-  getSingleUser
+  getAllUsers
+  // getSingleUser
 );
 
 router.patch('/update-user-password', authenticateUser, updateUserPassword);
