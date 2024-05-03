@@ -81,13 +81,13 @@ const login = async (req, res) => {
   const { email, password } = req.body;
 
   // for dev only
-  const waiting = (delay) => {
-    return new Promise((res) => {
-      setTimeout(res, delay);
-    });
-  };
+  // const waiting = (delay) => {
+  //   return new Promise((res) => {
+  //     setTimeout(res, delay);
+  //   });
+  // };
 
-  await waiting(15000);
+  // await waiting(15000);
 
   if (!email || !password) {
     throw new CustomError.BadRequestError('Please provide email and password');
