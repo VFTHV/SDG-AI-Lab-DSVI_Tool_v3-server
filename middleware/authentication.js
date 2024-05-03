@@ -13,7 +13,7 @@ const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new UnauthenticatedError('No token provided');
+    throw new CustomError.UnauthenticatedError('No token provided');
   }
 
   const token = authHeader.split(' ')[1];
