@@ -2,19 +2,22 @@ const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
 
 const authenticateUser = async (req, res, next) => {
-  const { token } = req.signedCookies;
-  // extend cookies validity when this runs
-  // it means person uses app
-  console.log('signedCookies: ', req.signedCookies);
-  console.log('cookies: ', req.cookies);
-  console.log('origin: ', req.headers.origin);
-  console.log('request headers: ', req.headers);
+  // const { token } = req.signedCookies;
 
-  if (!token) {
-    throw new CustomError.UnauthenticatedError(
-      'Authentication Invalid. Please login'
-    );
+  // if (!token) {
+  //   throw new CustomError.UnauthenticatedError(
+  //     'Authentication Invalid. Please login'
+  //   );
+  // }
+
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    throw new UnauthenticatedError('No token provided');
   }
+
+  const token = authHeader.split(' ')[1];
+
   try {
     const { name, email, userId, role, countries } = isTokenValid({ token });
     req.user = { name, email, userId, role, countries };

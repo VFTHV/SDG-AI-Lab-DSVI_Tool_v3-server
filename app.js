@@ -34,14 +34,13 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 // options so that DSVI nextJS front-end could receive cookies
 const corsOptions = {
-  origin: '*',
-  // origin: [
-  //   'http://localhost:3001',
-  //   'https://www.sdgailab-dsvi.com',
-  //   'https://sdgailab-dsvi.com',
-  //   'www.sdgailab-dsvi.com',
-  //   'sdgailab-dsvi.com',
-  // ],
+  origin: [
+    'http://localhost:3001',
+    'https://www.sdgailab-dsvi.com',
+    'https://sdgailab-dsvi.com',
+    'www.sdgailab-dsvi.com',
+    'sdgailab-dsvi.com',
+  ],
   credentials: true,
 };
 

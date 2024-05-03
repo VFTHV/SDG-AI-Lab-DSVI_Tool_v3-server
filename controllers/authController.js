@@ -79,7 +79,6 @@ const verifyEmail = async (req, res) => {
 
 const login = async (req, res) => {
   const { email, password } = req.body;
-  console.log('login');
   if (!email || !password) {
     throw new CustomError.BadRequestError('Please provide email and password');
   }
@@ -107,11 +106,13 @@ const login = async (req, res) => {
     role: user.role,
     countries: user.countries,
   };
-  attachCookiesToResponse({ res, user: tokenUser });
 
-  const token = jwt.sign(tokenUser, proces.env.JWT_SECRET, {
+  // attachCookiesToResponse({ res, user: tokenUser });
+
+  const token = jwt.sign(tokenUser, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_LIFETIME,
   });
+  console.log('login');
 
   res.status(StatusCodes.OK).json({ user: tokenUser, token });
 };
