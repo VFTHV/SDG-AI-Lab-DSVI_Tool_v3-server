@@ -4,7 +4,7 @@ const {
   register,
   login,
   verifyEmail,
-  logout,
+  // logout,
   showCurrentUser,
 } = require('../controllers/authController');
 const {
@@ -20,7 +20,7 @@ router.post(
 );
 router.post('/login', login);
 router.post('/verify-email', verifyEmail);
-router.get('/logout', logout);
+// router.get('/logout', logout);
 router.get('/routing', authenticateUser, showCurrentUser);
 
 module.exports = router;

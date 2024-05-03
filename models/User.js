@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { hashPassword } = require('../utils/password');
 
 const allowedCountries = ['Tajikistan', 'Niger', 'Burkina Faso'];
 
@@ -84,9 +85,9 @@ UserSchema.pre('save', async function () {
   console.log(this.modifiedPaths());
 
   if (!this.isModified('password')) return;
-
+  console.log('modifying password');
   const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
+  this.password = await hashPassword(this.password);
 });
 
 module.exports = mongoose.model('User', UserSchema);

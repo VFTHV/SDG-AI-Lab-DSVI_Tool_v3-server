@@ -117,14 +117,14 @@ const login = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: tokenUser, token });
 };
 
-const logout = async (req, res) => {
-  res.cookie('token', 'logout', {
-    httpOnly: true,
-    expires: new Date(Date.now() + 10 * 1000),
-  });
+// const logout = async (req, res) => {
+//   res.cookie('token', 'logout', {
+//     httpOnly: true,
+//     expires: new Date(Date.now() + 10 * 1000),
+//   });
 
-  res.status(StatusCodes.OK).send({ msg: 'User logged out' });
-};
+//   res.status(StatusCodes.OK).send({ msg: 'User logged out' });
+// };
 
 const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
@@ -134,6 +134,6 @@ module.exports = {
   register,
   login,
   verifyEmail,
-  logout,
+  // logout,
   showCurrentUser,
 };

@@ -117,7 +117,7 @@ const updateUserAdmin = async (req, res) => {
     if (password) {
       console.log('updating password with: ', password);
       const hashedPassword = await hashPassword(password);
-      user.password = hashedPassword;
+      user.password = password;
     }
 
     // assigning the rest of properties
