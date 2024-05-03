@@ -7,7 +7,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
-  const { email, name, password, countries, role } = req.body;
+  const { name, password, countries, role } = req.body;
+  const email = req.body.email.toLowerCase();
   console.log(req.body);
 
   const emailAlreadyExists = await User.findOne({ email });
@@ -78,8 +79,9 @@ const verifyEmail = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-
+  const { password } = req.body;
+  const email = req.body.email.toLowerCase();
+  console.log(email);
   // for dev only
   // const waiting = (delay) => {
   //   return new Promise((res) => {
