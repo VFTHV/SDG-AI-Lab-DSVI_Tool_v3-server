@@ -9,7 +9,7 @@ const getAllUsers = async (req, res) => {
   res.status(StatusCodes.OK).send({ users });
 };
 
-const getSingleUser = async (req, res) => {
+const searchUsers = async (req, res) => {
   const { email: searchTerm } = req.query;
 
   if (!searchTerm) {
@@ -19,7 +19,6 @@ const getSingleUser = async (req, res) => {
   const users = await User.find({
     email: { $regex: searchTerm, $options: 'i' },
   });
-  console.log(users);
 
   if (!users) {
     throw new CustomError.NotFoundError(
@@ -86,7 +85,6 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const { id: _id } = req.query;
-  console.log(req.query.id);
   const user = await User.findOne({ _id });
 
   if (!user) {
@@ -125,7 +123,7 @@ const updateUserAdmin = async (req, res) => {
 module.exports = {
   updateUserPassword,
   getAllUsers,
-  getSingleUser,
+  searchUsers: searchUsers,
   updateUserAdmin,
   deleteUser,
   updateUser,

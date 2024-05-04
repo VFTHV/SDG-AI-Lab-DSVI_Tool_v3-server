@@ -4,7 +4,7 @@ const router = express.Router();
 const {
   updateUserPassword,
   getAllUsers,
-  getSingleUser,
+  searchUsers,
   updateUserAdmin,
   deleteUser,
   updateUser,
@@ -15,14 +15,13 @@ const {
   authorizePermissions,
 } = require('../middleware/authentication');
 
-router.get('/', authenticateUser, authorizePermissions('admin'), getSingleUser);
+router.get('/', authenticateUser, authorizePermissions('admin'), searchUsers);
 
 router.get(
   '/get-all-users',
   authenticateUser,
   authorizePermissions('admin'),
   getAllUsers
-  // getSingleUser
 );
 
 router.patch('/update-user-password', authenticateUser, updateUserPassword);
