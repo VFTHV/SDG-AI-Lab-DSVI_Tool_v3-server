@@ -1,12 +1,7 @@
 const User = require('../models/User');
 const CustomError = require('../errors');
 const { StatusCodes } = require('http-status-codes');
-const {
-  hashPassword,
-  createTokenUser,
-  attachCookiesToResponse,
-} = require('../utils');
-const validator = require('validator');
+const { createTokenUser, attachCookiesToResponse } = require('../utils');
 
 const getAllUsers = async (req, res) => {
   const users = await User.find().select('-password');
@@ -15,25 +10,24 @@ const getAllUsers = async (req, res) => {
 };
 
 const getSingleUser = async (req, res) => {
-  const { email } = req.query;
+  const { email: searchTerm } = req.query;
 
-  if (!email) {
+  if (!searchTerm) {
     throw new CustomError.BadRequestError('Please provide user email');
   }
 
-  const isEmail = validator.isEmail(email);
-  if (!isEmail) {
-    throw new CustomError.BadRequestError(`Invalid Email Format`);
-  }
+  const users = await User.find({
+    email: { $regex: searchTerm, $options: 'i' },
+  });
+  console.log(users);
 
-  const user = await User.findOne({ email });
-  if (!user) {
+  if (!users) {
     throw new CustomError.NotFoundError(
-      `User with email ${email} was not found`
+      `User with email ${searchTerm} was not found`
     );
   }
 
-  res.status(StatusCodes.OK).send({ user });
+  res.status(StatusCodes.OK).send({ users });
 };
 
 const updateUserPassword = async (req, res) => {
@@ -114,8 +108,6 @@ const updateUserAdmin = async (req, res) => {
   const user = await User.findOne({ _id });
 
   if (password) {
-    console.log('updating password with: ', password);
-    const hashedPassword = await hashPassword(password);
     user.password = password;
   }
 
