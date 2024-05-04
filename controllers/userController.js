@@ -24,27 +24,6 @@ const getUsers = async (req, res) => {
   res.status(StatusCodes.OK).send({ users });
 };
 
-const searchUsers = async (req, res) => {
-  const { email: searchTerm } = req.query;
-
-  if (!searchTerm) {
-    throw new CustomError.BadRequestError('Please provide user email');
-  }
-
-  const users = await User.find({
-    email: { $regex: searchTerm, $options: 'i' },
-  }).select('-password');
-  console.log(users);
-
-  if (!users) {
-    throw new CustomError.NotFoundError(
-      `User with email ${searchTerm} was not found`
-    );
-  }
-
-  res.status(StatusCodes.OK).send({ users });
-};
-
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
@@ -139,7 +118,6 @@ const updateUserAdmin = async (req, res) => {
 module.exports = {
   updateUserPassword,
   getUsers,
-  searchUsers: searchUsers,
   updateUserAdmin,
   deleteUser,
   updateUser,
