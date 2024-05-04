@@ -3,7 +3,7 @@ const router = express.Router();
 
 const {
   updateUserPassword,
-  getAllUsers,
+  getUsers,
   searchUsers,
   updateUserAdmin,
   deleteUser,
@@ -21,7 +21,7 @@ router.get(
   '/get-all-users',
   authenticateUser,
   authorizePermissions('admin'),
-  getAllUsers
+  getUsers
 );
 
 router.patch('/update-user-password', authenticateUser, updateUserPassword);

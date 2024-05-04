@@ -3,8 +3,23 @@ const CustomError = require('../errors');
 const { StatusCodes } = require('http-status-codes');
 const { createTokenUser, attachCookiesToResponse } = require('../utils');
 
-const getAllUsers = async (req, res) => {
-  const users = await User.find().select('-password');
+const getUsers = async (req, res) => {
+  const { email } = req.query;
+
+  let searchTerm = null;
+  if (email) {
+    searchTerm = {
+      email: { $regex: email, $options: 'i' },
+    };
+  }
+
+  const users = await User.find(searchTerm).select('-password');
+
+  if (!users.length) {
+    throw new CustomError.NotFoundError(
+      `Nothing matches search term "${email}"`
+    );
+  }
   // attach pagination here
   res.status(StatusCodes.OK).send({ users });
 };
@@ -18,7 +33,8 @@ const searchUsers = async (req, res) => {
 
   const users = await User.find({
     email: { $regex: searchTerm, $options: 'i' },
-  });
+  }).select('-password');
+  console.log(users);
 
   if (!users) {
     throw new CustomError.NotFoundError(
@@ -122,7 +138,7 @@ const updateUserAdmin = async (req, res) => {
 
 module.exports = {
   updateUserPassword,
-  getAllUsers,
+  getUsers,
   searchUsers: searchUsers,
   updateUserAdmin,
   deleteUser,
