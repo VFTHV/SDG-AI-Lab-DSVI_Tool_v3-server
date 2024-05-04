@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 const register = async (req, res) => {
   const { name, password, countries, role } = req.body;
   const email = req.body.email.toLowerCase();
-  console.log(req.body);
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
@@ -20,11 +19,11 @@ const register = async (req, res) => {
 
   const verificationToken = crypto.randomBytes(40).toString('hex');
 
-  const hashedPassword = await hashPassword(password);
+  // const hashedPassword = await hashPassword(password);
   const user = await User.create({
     name,
     email,
-    password: hashedPassword,
+    password,
     countries,
     role,
     verificationToken,

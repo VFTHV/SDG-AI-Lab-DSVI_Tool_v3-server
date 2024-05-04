@@ -111,28 +111,23 @@ const deleteUser = async (req, res) => {
 const updateUserAdmin = async (req, res) => {
   const { password, _id, ...otherProps } = req.body;
 
-  try {
-    const user = await User.findOne({ _id });
+  const user = await User.findOne({ _id });
 
-    if (password) {
-      console.log('updating password with: ', password);
-      const hashedPassword = await hashPassword(password);
-      user.password = password;
-    }
-
-    // assigning the rest of properties
-    for (prop in otherProps) {
-      if (Object.prototype.hasOwnProperty.call(otherProps, prop)) {
-        user[prop] = otherProps[prop];
-      }
-    }
-
-    await user.save();
-    res.status(StatusCodes.OK).json({ msg: 'User updated successfully', user });
-  } catch (error) {
-    console.log('Error in updateUserAdmin: ', error);
-    throw new CustomError.ServerError('Internal Server Error');
+  if (password) {
+    console.log('updating password with: ', password);
+    const hashedPassword = await hashPassword(password);
+    user.password = password;
   }
+
+  // assigning the rest of properties
+  for (prop in otherProps) {
+    if (Object.prototype.hasOwnProperty.call(otherProps, prop)) {
+      user[prop] = otherProps[prop];
+    }
+  }
+
+  await user.save();
+  res.status(StatusCodes.OK).json({ msg: 'User updated successfully', user });
 };
 
 module.exports = {

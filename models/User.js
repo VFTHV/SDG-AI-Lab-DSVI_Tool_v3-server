@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const validatorLib = require('validator');
 const { hashPassword } = require('../utils/password');
 
 const allowedCountries = ['Tajikistan', 'Niger', 'Burkina Faso'];
@@ -11,6 +12,14 @@ const countryValidator = (countries) => {
     countries.length &&
     countries.every((country) => allowedCountries.includes(country))
   );
+};
+
+const passwordRequirements = {
+  minLength: 8,
+  minLowercase: 1,
+  minUppercase: 1,
+  minNumbers: 1,
+  minSymbols: 1,
 };
 
 const UserSchema = new mongoose.Schema({
@@ -35,9 +44,15 @@ const UserSchema = new mongoose.Schema({
     required: [true, 'Please provide password'],
     validate: {
       validator: function (value) {
-        return value.length >= 6;
+        const isStrongPassword = validatorLib.isStrongPassword(
+          value,
+          passwordRequirements
+        );
+        const hasNoSpaces = !validatorLib.contains(value, ' ');
+
+        return isStrongPassword && hasNoSpaces;
       },
-      message: `Password is shorter than minimum allowed length of 6`,
+      message: `Weak password. Requirements:  min length: 8, min lowercase: 1, min uppercase: 1, min numbers: 1, min symbols: 1,`,
     },
     minlength: 6,
   },
@@ -86,7 +101,6 @@ UserSchema.pre('save', async function () {
 
   if (!this.isModified('password')) return;
   console.log('modifying password');
-  const salt = await bcrypt.genSalt(10);
   this.password = await hashPassword(this.password);
 });
 
