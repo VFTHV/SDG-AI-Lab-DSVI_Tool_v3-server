@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   updateUserPassword,
   getUsers,
+  getUserById,
   updateUserAdmin,
   deleteUser,
   updateUser,
@@ -15,6 +16,12 @@ const {
 } = require('../middleware/authentication');
 
 router.get('/', authenticateUser, authorizePermissions('admin'), getUsers);
+router.get(
+  '/get-user',
+  authenticateUser,
+  authorizePermissions('admin'),
+  getUserById
+);
 
 router.patch('/update-user-password', authenticateUser, updateUserPassword);
 router.patch('/update-user', authenticateUser, updateUser);

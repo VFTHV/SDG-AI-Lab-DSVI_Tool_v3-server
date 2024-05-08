@@ -134,6 +134,7 @@ const updateUserAdmin = async (req, res) => {
 module.exports = {
   updateUserPassword,
   getUsers,
+  getUserById,
   updateUserAdmin,
   deleteUser,
   updateUser,
