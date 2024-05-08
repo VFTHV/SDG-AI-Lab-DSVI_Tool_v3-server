@@ -24,6 +24,22 @@ const getUsers = async (req, res) => {
   res.status(StatusCodes.OK).send({ users });
 };
 
+const getUserById = async (req, res) => {
+  const { userId } = req.query;
+
+  if (!userId) {
+    throw new CustomError.BadRequestError('No user ID provided');
+  }
+
+  const user = await User.findOne({ _id: userId });
+
+  if (!user) {
+    throw new CustomError.NotFoundError('User Not Found');
+  }
+
+  res.status(StatusCodes.OK).json({ user });
+};
+
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
 
