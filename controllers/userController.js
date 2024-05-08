@@ -31,7 +31,7 @@ const getUserById = async (req, res) => {
     throw new CustomError.BadRequestError('No user ID provided');
   }
 
-  const user = await User.findOne({ _id: userId });
+  const user = await User.findOne({ _id: userId }).select('-password');
 
   if (!user) {
     throw new CustomError.NotFoundError('User Not Found');
