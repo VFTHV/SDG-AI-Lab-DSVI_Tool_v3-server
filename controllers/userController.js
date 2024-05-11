@@ -6,6 +6,7 @@ const { createTokenUser, attachCookiesToResponse } = require('../utils');
 const getUsers = async (req, res) => {
   const { email } = req.query;
   // get users controller
+  // get users controller
 
   let searchTerm = null;
   if (email) {
