@@ -8,6 +8,7 @@ const getUsers = async (req, res) => {
   // get users controller
   // get users controller
   // get users controller
+  // get users controller
 
   let searchTerm = null;
   if (email) {
