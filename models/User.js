@@ -93,6 +93,7 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
 // may need to delete the createJWT method
 // may need to delete the createJWT method
 // may need to delete the createJWT method
+// may need to delete the createJWT method
 
 UserSchema.methods.createJWT = function () {
   return jwt.sign(
