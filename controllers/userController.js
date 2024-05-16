@@ -114,7 +114,7 @@ const deleteUser = async (req, res) => {
 const updateUserAdmin = async (req, res) => {
   const { password, _id, ...otherProps } = req.body;
 
-  const user = await User.findOne({ _id });
+  const user = await User.findOne({ _id }).select('-password');
 
   if (password) {
     user.password = password;
