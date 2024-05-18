@@ -104,8 +104,7 @@ const login = async (req, res) => {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
 
-  const isTokenVerified = user.isVerified;
-  if (!isTokenVerified) {
+  if (!user.isVerified) {
     throw new CustomError.UnauthenticatedError('Please verify your email');
   }
 
