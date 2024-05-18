@@ -2,7 +2,7 @@ const User = require('../models/User');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { sendVerificationEmail } = require('../utils');
-const { attachCookiesToResponse, hashPassword } = require('../utils');
+const { createTokenUser } = require('../utils');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -98,7 +98,6 @@ const login = async (req, res) => {
   if (!user) {
     throw new CustomError.UnauthenticatedError('Invalid Credentials');
   }
-
   //  compare password
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
@@ -110,13 +109,15 @@ const login = async (req, res) => {
     throw new CustomError.UnauthenticatedError('Please verify your email');
   }
 
-  const tokenUser = {
-    name: user.name,
-    email: user.email,
-    userId: user._id,
-    role: user.role,
-    countries: user.countries,
-  };
+  // const tokenUser = {
+  //   name: user.name,
+  //   email: user.email,
+  //   userId: user._id,
+  //   role: user.role,
+  //   countries: user.countries,
+  // };
+
+  const tokenUser = createTokenUser(user);
 
   // attachCookiesToResponse({ res, user: tokenUser });
 
