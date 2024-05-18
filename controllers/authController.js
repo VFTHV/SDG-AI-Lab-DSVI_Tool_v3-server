@@ -121,9 +121,35 @@ const login = async (req, res) => {
 
   // create refresh token
   let refreshToken = '';
-  // check for existing token
 
-  (refreshToken = crypto.randomBytes(40)), toString('hex');
+  // check for existing token and send response
+  const existingToken = await Token.findOne({ user: user._id });
+
+  if (existingToken) {
+    const { isValid } = existingToken;
+    if (!isValid) {
+      throw new CustomError.UnauthenticatedError('Invalid Credentials');
+    }
+    refreshToken = existingToken.refreshToken;
+
+    const accessTokenJWT = createJWTforHeader({
+      payload: { user: tokenUser },
+      expiresIn: 15 * 1000,
+    });
+    const refreshTokenJWT = createJWTforHeader({
+      payload: { user: tokenUser, refreshToken },
+      expiresIn: 24 * 60 * 60 * 1000,
+    });
+
+    res
+      .status(StatusCodes.OK)
+      .json({ user: tokenUser, accessTokenJWT, refreshTokenJWT });
+
+    return;
+  }
+
+  // if no existing token: create one and send same response
+  refreshToken = crypto.randomBytes(40).toString('hex');
   const userAgent = req.headers['user-agent'];
   const ip = req.ip;
   const userToken = { refreshToken, ip, userAgent, user: user._id };
