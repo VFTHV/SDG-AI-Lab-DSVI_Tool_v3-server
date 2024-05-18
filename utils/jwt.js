@@ -43,11 +43,11 @@ const attachCookiesToResponse = ({ res, user, refreshToken }) => {
 //   });
 // };
 
-const createJWTforHeader = ({ payload }) => {
+const createJWTforHeader = ({ payload, expiresIn }) => {
   const token = jwt.sign(payload, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
+    expiresIn,
   });
   return token;
 };
 
-module.exports = { attachCookiesToResponse, isTokenValid };
+module.exports = { isTokenValid, createJWTforHeader };

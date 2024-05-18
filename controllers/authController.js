@@ -1,8 +1,9 @@
 const User = require('../models/User');
+const Token = require('../models/Token');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { sendVerificationEmail } = require('../utils');
-const { createTokenUser } = require('../utils');
+const { createTokenUser, createJWTforHeader } = require('../utils');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -118,13 +119,30 @@ const login = async (req, res) => {
 
   const tokenUser = createTokenUser(user);
 
-  // attachCookiesToResponse({ res, user: tokenUser });
+  // create refresh token
+  let refreshToken = '';
+  // check for existing token
 
-  const token = jwt.sign(tokenUser, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_LIFETIME,
+  (refreshToken = crypto.randomBytes(40)), toString('hex');
+  const userAgent = req.headers['user-agent'];
+  const ip = req.ip;
+  const userToken = { refreshToken, ip, userAgent, user: user._id };
+
+  await Token.create(userToken);
+
+  // use .env lifetime variables here for each type of token
+  const accessTokenJWT = createJWTforHeader({
+    payload: { user: tokenUser },
+    expiresIn: 15 * 1000,
+  });
+  const refreshTokenJWT = createJWTforHeader({
+    payload: { user: tokenUser, refreshToken },
+    expiresIn: 24 * 60 * 60 * 1000,
   });
 
-  res.status(StatusCodes.OK).json({ user: tokenUser, token });
+  res
+    .status(StatusCodes.OK)
+    .json({ user: tokenUser, accessTokenJWT, refreshTokenJWT });
 };
 
 // const logout = async (req, res) => {
