@@ -2,14 +2,6 @@ const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
 
 const authenticateUser = async (req, res, next) => {
-  // const { token } = req.signedCookies;
-
-  // if (!token) {
-  //   throw new CustomError.UnauthenticatedError(
-  //     'Authentication Invalid. Please login'
-  //   );
-  // }
-
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -18,10 +10,11 @@ const authenticateUser = async (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
+  //  auth with refresh token
   try {
-    const { name, email, userId, role, countries } = isTokenValid({ token });
-    req.user = { name, email, userId, role, countries };
-    next();
+    // const { name, email, userId, role, countries } = isTokenValid({ token });
+    // req.user = { name, email, userId, role, countries };
+    // next();
   } catch (error) {
     throw new CustomError.UnauthenticatedError(
       'Authentication Invalid. Please login'
