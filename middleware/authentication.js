@@ -11,6 +11,7 @@ const authenticateUser = async (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   //  auth with refresh token
+  //  auth with refresh token
   try {
     // const { name, email, userId, role, countries } = isTokenValid({ token });
     // req.user = { name, email, userId, role, countries };
