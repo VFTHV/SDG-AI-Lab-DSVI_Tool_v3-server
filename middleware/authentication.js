@@ -17,20 +17,29 @@ const authenticateUser = async (req, res, next) => {
     req.user = payload.user;
     console.log(payload);
     next();
-  } catch (_) {
-    try {
-      const payload = isTokenValid(refreshToken);
-
-      const existingToken = await Token.findOne({
-        user: payload.user.userId,
-        refreshToken: payload.refreshToken,
-      });
-    } catch (error) {
-      throw new CustomError.UnauthenticatedError(
-        'Authentication Invalid. Please login'
-      );
-    }
+  } catch (error) {
+    console.log('Access token verification failed: ', error.message);
   }
+
+  if (!refreshToken) {
+    throw new CustomError.UnauthenticatedError('No refresh token provided');
+  }
+
+  try {
+    const payload = isTokenValid(refreshToken);
+
+    const existingToken = await Token.findOne({
+      user: payload.user.userId,
+      refreshToken: payload.refreshToken,
+    });
+
+    if (!existingToken || !existingToken?.isValid) {
+      throw new CustomError.UnauthenticatedError('Invalid refresh token');
+    }
+
+    req.user = payload.user;
+    next();
+  } catch (error) {}
 };
 
 const authorizePermissions = (...roles) => {
