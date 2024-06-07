@@ -131,6 +131,7 @@ const login = async (req, res) => {
       throw new CustomError.UnauthenticatedError('Invalid Credentials');
     }
     refreshToken = existingToken.refreshToken;
+    console.log('refreshToken already exists');
 
     const accessTokenJWT = createJWTforHeader({
       payload: { user: tokenUser },
@@ -150,6 +151,7 @@ const login = async (req, res) => {
 
   // if no existing token: create one and send same response
   refreshToken = crypto.randomBytes(40).toString('hex');
+  console.log('creating a refreshToken');
   const userAgent = req.headers['user-agent'];
   const ip = req.ip;
   const userToken = { refreshToken, ip, userAgent, user: user._id };

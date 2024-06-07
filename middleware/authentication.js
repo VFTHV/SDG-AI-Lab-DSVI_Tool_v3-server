@@ -3,14 +3,21 @@ const { isTokenValid } = require('../utils');
 
 const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
+  const refreshToken = req.headers['x-refresh-token'];
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new CustomError.UnauthenticatedError('No token provided');
   }
 
-  const token = authHeader.split(' ')[1];
+  const accessToken = authHeader.split(' ')[1];
+  console.log(refreshToken);
 
   try {
+    if (accessToken) {
+      const payload = isTokenValid(accessToken);
+      req.user = payload.user;
+      return next();
+    }
     // const { name, email, userId, role, countries } = isTokenValid({ token });
     // req.user = { name, email, userId, role, countries };
     // next();
