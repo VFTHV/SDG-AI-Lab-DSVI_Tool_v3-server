@@ -135,11 +135,11 @@ const login = async (req, res) => {
 
     const accessTokenJWT = createJWTforHeader({
       payload: { user: tokenUser },
-      expiresIn: 15 * 1000,
+      expiresIn: 100,
     });
     const refreshTokenJWT = createJWTforHeader({
       payload: { user: tokenUser, refreshToken },
-      expiresIn: 24 * 60 * 60 * 1000,
+      expiresIn: 24 * 60 * 60 * 1,
     });
 
     res
@@ -161,11 +161,11 @@ const login = async (req, res) => {
   // use .env lifetime variables here for each type of token
   const accessTokenJWT = createJWTforHeader({
     payload: { user: tokenUser },
-    expiresIn: 15 * 1000,
+    expiresIn: 100,
   });
   const refreshTokenJWT = createJWTforHeader({
     payload: { user: tokenUser, refreshToken },
-    expiresIn: 24 * 60 * 60 * 1000,
+    expiresIn: 24 * 60 * 60 * 1,
   });
 
   res

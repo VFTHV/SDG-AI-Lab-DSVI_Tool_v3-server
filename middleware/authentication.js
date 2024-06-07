@@ -1,5 +1,6 @@
 const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
+const Token = require('../models/Token');
 
 const authenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -10,21 +11,25 @@ const authenticateUser = async (req, res, next) => {
   }
 
   const accessToken = authHeader.split(' ')[1];
-  console.log(refreshToken);
 
   try {
-    if (accessToken) {
-      const payload = isTokenValid(accessToken);
-      req.user = payload.user;
-      return next();
+    const payload = isTokenValid(accessToken);
+    req.user = payload.user;
+    console.log(payload);
+    next();
+  } catch (_) {
+    try {
+      const payload = isTokenValid(refreshToken);
+
+      const existingToken = await Token.findOne({
+        user: payload.user.userId,
+        refreshToken: payload.refreshToken,
+      });
+    } catch (error) {
+      throw new CustomError.UnauthenticatedError(
+        'Authentication Invalid. Please login'
+      );
     }
-    // const { name, email, userId, role, countries } = isTokenValid({ token });
-    // req.user = { name, email, userId, role, countries };
-    // next();
-  } catch (error) {
-    throw new CustomError.UnauthenticatedError(
-      'Authentication Invalid. Please login'
-    );
   }
 };
 
