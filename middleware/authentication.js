@@ -29,6 +29,7 @@ const authenticateUser = async (req, res, next) => {
   // refreshToken item
   // refreshToken item
   // refreshToken item
+  // refreshToken item
 
   try {
     const payload = isTokenValid(refreshToken);
