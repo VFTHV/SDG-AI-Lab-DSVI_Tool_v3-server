@@ -3,8 +3,10 @@ const { isTokenValid } = require('../utils');
 const Token = require('../models/Token');
 
 const authenticateUser = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
   const refreshToken = req.headers['x-refresh-token'];
+  const authHeader = req.headers.authorization;
+
+  //  change all error messages to invalid credentials
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     throw new CustomError.UnauthenticatedError('No token provided');
@@ -39,7 +41,9 @@ const authenticateUser = async (req, res, next) => {
 
     req.user = payload.user;
     next();
-  } catch (error) {}
+  } catch (error) {
+    throw new CustomError.UnauthenticatedError('Authentication Invalid');
+  }
 };
 
 const authorizePermissions = (...roles) => {
