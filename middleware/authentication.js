@@ -25,6 +25,7 @@ const authenticateUser = async (req, res, next) => {
     throw new CustomError.UnauthenticatedError('No refresh token provided');
   }
   // refreshToken item
+  // refreshToken item
 
   try {
     const payload = isTokenValid(refreshToken);
