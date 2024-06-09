@@ -1,11 +1,11 @@
 const sendVerificationEmail = require('./sendVerificationEmail');
-const { isTokenValid, createJWTforHeader } = require('./jwt');
+const { isTokenValid, createAccessAndRefreshJWT } = require('./jwt');
 const { hashPassword } = require('./password');
 const createTokenUser = require('./createTokenUser');
 
 module.exports = {
   sendVerificationEmail,
-  createJWTforHeader,
+  createAccessAndRefreshJWT,
   isTokenValid,
   hashPassword,
   createTokenUser,

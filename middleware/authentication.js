@@ -1,7 +1,7 @@
 const CustomError = require('../errors');
 const { isTokenValid } = require('../utils');
 const Token = require('../models/Token');
-const { createJWTforHeader } = require('../utils');
+const { createAccessAndRefreshJWT } = require('../utils');
 
 const authenticateUser = async (req, res, next) => {
   const refreshToken = req.headers['x-refresh-token'];
@@ -45,13 +45,22 @@ const authenticateUser = async (req, res, next) => {
     }
 
     // creating new tokens and persisting refreshToken to database
-    const accessTokenJWT = createJWTforHeader({
-      payload: { user: payload.user },
-      expiresIn: 30,
-    });
-    const refreshTokenJWT = createJWTforHeader({
-      payload: { user: payload.user, refreshToken: existingToken.refreshToken },
-      expiresIn: 24 * 60 * 60 * 1,
+    // const accessTokenJWT = createAccessAndRefreshJWT({
+    //   payload: { user: payload.user },
+    //   expiresIn: 30,
+    // });
+    // const refreshTokenJWT = createAccessAndRefreshJWT({
+    //   payload: { user: payload.user, refreshToken: existingToken.refreshToken },
+    //   expiresIn: 24 * 60 * 60 * 1,
+    // });
+
+    console.log(typeof process.env.ACCESS_JWT_EXPIRES_IN);
+
+    const { accessJWT, refreshJWT } = createAccessAndRefreshJWT({
+      accessJWTexpiresIn: Number(process.env.ACCESS_JWT_EXPIRES_IN),
+      refreshJWTexpiresIn: process.env.REFRESH_JWT_EXPIRES_IN,
+      refreshToken: existingToken.refreshToken,
+      payload,
     });
 
     // console.log('updating refreshToken');
@@ -59,7 +68,7 @@ const authenticateUser = async (req, res, next) => {
     // const update = { refreshToken: refreshTokenJWT };
     // await Token.findOneAndUpdate(filter, update);
 
-    req.tokens = { accessToken: accessTokenJWT, refreshToken: refreshTokenJWT };
+    req.tokens = { accessJWT, refreshJWT };
     req.user = payload.user;
 
     next();

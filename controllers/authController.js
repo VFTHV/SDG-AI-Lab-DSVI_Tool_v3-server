@@ -3,7 +3,7 @@ const Token = require('../models/Token');
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { sendVerificationEmail } = require('../utils');
-const { createTokenUser, createJWTforHeader } = require('../utils');
+const { createTokenUser, createAccessAndRefreshJWT } = require('../utils');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
@@ -125,11 +125,12 @@ const login = async (req, res) => {
     refreshToken = existingToken.refreshToken;
     console.log('refreshToken already exists');
 
-    const accessTokenJWT = createJWTforHeader({
+    const accessTokenJWT = createAccessAndRefreshJWT({
       payload: { user: tokenUser },
       expiresIn: 30,
     });
-    const refreshTokenJWT = createJWTforHeader({
+    // rotate refreshToken here
+    const refreshTokenJWT = createAccessAndRefreshJWT({
       payload: { user: tokenUser, refreshToken },
       expiresIn: 24 * 60 * 60 * 1,
     });
@@ -153,11 +154,11 @@ const login = async (req, res) => {
   await Token.create(userToken);
 
   // use .env lifetime variables here for each type of token
-  const accessTokenJWT = createJWTforHeader({
+  const accessTokenJWT = createAccessAndRefreshJWT({
     payload: { user: tokenUser },
     expiresIn: 100,
   });
-  const refreshTokenJWT = createJWTforHeader({
+  const refreshTokenJWT = createAccessAndRefreshJWT({
     payload: { user: tokenUser, refreshToken },
     expiresIn: 24 * 60 * 60 * 1,
   });
