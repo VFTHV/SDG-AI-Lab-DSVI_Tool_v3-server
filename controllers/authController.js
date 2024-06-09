@@ -5,7 +5,6 @@ const CustomError = require('../errors');
 const { sendVerificationEmail } = require('../utils');
 const { createTokenUser, createAccessAndRefreshJWT } = require('../utils');
 const crypto = require('crypto');
-const jwt = require('jsonwebtoken');
 
 const register = async (req, res) => {
   const { name, password, countries, role } = req.body;
@@ -125,20 +124,14 @@ const login = async (req, res) => {
     refreshToken = existingToken.refreshToken;
     console.log('refreshToken already exists');
 
-    const accessTokenJWT = createAccessAndRefreshJWT({
-      payload: { user: tokenUser },
-      expiresIn: 30,
-    });
-    // rotate refreshToken here
-    const refreshTokenJWT = createAccessAndRefreshJWT({
-      payload: { user: tokenUser, refreshToken },
-      expiresIn: 24 * 60 * 60 * 1,
+    const { accessJWT, refreshJWT } = createAccessAndRefreshJWT({
+      user: tokenUser,
+      refreshToken: refreshToken,
     });
 
     res.status(StatusCodes.OK).json({
       user: tokenUser,
-      accessToken: accessTokenJWT,
-      refreshToken: refreshTokenJWT,
+      tokens: { accessJWT, refreshJWT },
     });
 
     return;
@@ -153,19 +146,24 @@ const login = async (req, res) => {
 
   await Token.create(userToken);
 
+  const { accessJWT, refreshJWT } = createAccessAndRefreshJWT({
+    user: tokenUser,
+    refreshToken: refreshToken,
+  });
+
   // use .env lifetime variables here for each type of token
-  const accessTokenJWT = createAccessAndRefreshJWT({
-    payload: { user: tokenUser },
-    expiresIn: 100,
-  });
-  const refreshTokenJWT = createAccessAndRefreshJWT({
-    payload: { user: tokenUser, refreshToken },
-    expiresIn: 24 * 60 * 60 * 1,
-  });
+  // const accessTokenJWT = createAccessAndRefreshJWT({
+  //   payload: { user: tokenUser },
+  //   expiresIn: 100,
+  // });
+  // const refreshTokenJWT = createAccessAndRefreshJWT({
+  //   payload: { user: tokenUser, refreshToken },
+  //   expiresIn: 24 * 60 * 60 * 1,
+  // });
 
   res
     .status(StatusCodes.OK)
-    .json({ user: tokenUser, accessTokenJWT, refreshTokenJWT });
+    .json({ user: tokenUser, tokens: { accessJWT, refreshJWT } });
 };
 
 // const logout = async (req, res) => {

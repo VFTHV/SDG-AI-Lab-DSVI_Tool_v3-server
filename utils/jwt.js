@@ -50,19 +50,14 @@ const createJWT = ({ payload, expiresIn }) => {
   return token;
 };
 
-const createAccessAndRefreshJWT = ({
-  accessJWTexpiresIn,
-  refreshJWTexpiresIn,
-  refreshToken,
-  payload,
-}) => {
+const createAccessAndRefreshJWT = ({ user, refreshToken }) => {
   const accessJWT = createJWT({
-    payload: { user: payload.user },
-    expiresIn: accessJWTexpiresIn,
+    payload: { user },
+    expiresIn: Number(process.env.ACCESS_JWT_EXPIRES_IN),
   });
   const refreshJWT = createJWT({
-    payload: { user: payload.user, refreshToken: refreshToken },
-    expiresIn: refreshJWTexpiresIn,
+    payload: { user, refreshToken },
+    expiresIn: process.env.REFRESH_JWT_EXPIRES_IN,
   });
 
   return { accessJWT, refreshJWT };
