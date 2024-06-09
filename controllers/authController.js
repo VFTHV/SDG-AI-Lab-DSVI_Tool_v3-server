@@ -109,14 +109,6 @@ const login = async (req, res) => {
     throw new CustomError.UnauthenticatedError('Please verify your email');
   }
 
-  // const tokenUser = {
-  //   name: user.name,
-  //   email: user.email,
-  //   userId: user._id,
-  //   role: user.role,
-  //   countries: user.countries,
-  // };
-
   const tokenUser = createTokenUser(user);
 
   // create refresh token
@@ -135,16 +127,18 @@ const login = async (req, res) => {
 
     const accessTokenJWT = createJWTforHeader({
       payload: { user: tokenUser },
-      expiresIn: 100,
+      expiresIn: 30,
     });
     const refreshTokenJWT = createJWTforHeader({
       payload: { user: tokenUser, refreshToken },
       expiresIn: 24 * 60 * 60 * 1,
     });
 
-    res
-      .status(StatusCodes.OK)
-      .json({ user: tokenUser, accessTokenJWT, refreshTokenJWT });
+    res.status(StatusCodes.OK).json({
+      user: tokenUser,
+      accessToken: accessTokenJWT,
+      refreshToken: refreshTokenJWT,
+    });
 
     return;
   }
@@ -183,7 +177,9 @@ const login = async (req, res) => {
 // };
 
 const showCurrentUser = async (req, res) => {
-  res.status(StatusCodes.OK).json({ user: req.user });
+  console.log('show user tokens: ', req.tokens);
+
+  res.status(StatusCodes.OK).json({ user: req.user, tokens: req.tokens });
 };
 
 module.exports = {
