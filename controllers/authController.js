@@ -80,7 +80,6 @@ const verifyEmail = async (req, res) => {
 const login = async (req, res) => {
   const { password } = req.body;
   const email = req.body.email.toLowerCase();
-  console.log(email);
   // for dev only
   // const waiting = (delay) => {
   //   return new Promise((res) => {
@@ -121,13 +120,16 @@ const login = async (req, res) => {
     if (!isValid) {
       throw new CustomError.UnauthenticatedError('Invalid Credentials');
     }
-    refreshToken = existingToken.refreshToken;
-    console.log('refreshToken already exists');
-
+    console.log('login: creating new refreshToken');
+    const newRefreshToken = crypto.randomBytes(40).toString('hex');
     const { accessJWT, refreshJWT } = createAccessAndRefreshJWT({
       user: tokenUser,
-      refreshToken: refreshToken,
+      refreshToken: newRefreshToken,
     });
+
+    const filter = { user: tokenUser.userId };
+    const update = { refreshToken: newRefreshToken };
+    await Token.findOneAndUpdate(filter, update);
 
     res.status(StatusCodes.OK).json({
       user: tokenUser,

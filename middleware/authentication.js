@@ -14,7 +14,7 @@ const authenticateUser = async (req, res, next) => {
     throw new CustomError.UnauthenticatedError('No token provided');
   }
 
-  // CHECKING VALIDITY OF ACCESS TOKEN
+  // CHECK VALIDITY OF ACCESS TOKEN
   const accessToken = authHeader.split(' ')[1];
   try {
     const payload = isTokenValid(accessToken);
@@ -31,9 +31,8 @@ const authenticateUser = async (req, res, next) => {
     throw new CustomError.UnauthenticatedError('No refresh token provided');
   }
 
-  // CHECKING VALIDITY OF REFRESH TOKEN
+  // CHECK VALIDITY OF REFRESH TOKEN
   try {
-    console.log('accessToken is invalid');
     const payload = isTokenValid(refreshToken);
     const existingToken = await Token.findOne({
       user: payload.user.userId,
@@ -42,16 +41,16 @@ const authenticateUser = async (req, res, next) => {
 
     if (!existingToken || !existingToken?.isValid) {
       // RESET REFRESH TOKEN
+      // possibly set isValid = false
+      console.log('resetting refreshToken');
       const filter = { user: payload.user.userId };
       const update = { refreshToken: '' };
       await Token.findOneAndUpdate(filter, update);
       throw new CustomError.UnauthenticatedError('Invalid refresh token');
     }
 
-    // creating new tokens and persisting refreshToken to database
-    // rotating the refreshToken
-
-    console.log('creating new refreshToken');
+    // ROTATE REFRESH TOKEN
+    console.log('auth middleware: creating new refreshToken');
     const newRefreshToken = crypto.randomBytes(40).toString('hex');
     const { accessJWT, refreshJWT } = createAccessAndRefreshJWT({
       user: payload.user,
