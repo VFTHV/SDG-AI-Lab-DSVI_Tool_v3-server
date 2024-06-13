@@ -23,6 +23,7 @@ const authenticateUser = async (req, res, next) => {
     req.user = payload.user;
 
     req.tokens = { accessJWT: accessToken, refreshJWT: refreshToken };
+    // req.tokens = { accessJWT: accessToken, refreshJWT: refreshToken };
     next();
     return;
   } catch (error) {
