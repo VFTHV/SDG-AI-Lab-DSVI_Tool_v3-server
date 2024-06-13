@@ -178,8 +178,6 @@ const login = async (req, res) => {
 // };
 
 const showCurrentUser = async (req, res) => {
-  console.log('show user tokens: ', req.tokens);
-
   res.status(StatusCodes.OK).json({ user: req.user, tokens: req.tokens });
 };
 

@@ -7,7 +7,8 @@ const crypto = require('crypto');
 const authenticateUser = async (req, res, next) => {
   const refreshToken = req.headers['x-refresh-token'];
   const authHeader = req.headers.authorization;
-
+  console.log('authHeader: ', authHeader.substring(0, 10));
+  console.log('refreshToken: ', refreshToken.substring(0, 10));
   //  change all error messages to invalid credentials
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -21,6 +22,7 @@ const authenticateUser = async (req, res, next) => {
     console.log('accessToken is valid');
     req.user = payload.user;
 
+    req.tokens = { accessJWT: accessToken, refreshJWT: refreshToken };
     next();
     return;
   } catch (error) {
