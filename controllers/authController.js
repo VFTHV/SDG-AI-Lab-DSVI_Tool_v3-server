@@ -80,14 +80,6 @@ const verifyEmail = async (req, res) => {
 const login = async (req, res) => {
   const { password } = req.body;
   const email = req.body.email.toLowerCase();
-  // for dev only
-  // const waiting = (delay) => {
-  //   return new Promise((res) => {
-  //     setTimeout(res, delay);
-  //   });
-  // };
-
-  // await waiting(15000);
 
   if (!email || !password) {
     throw new CustomError.BadRequestError('Please provide email and password');
@@ -118,7 +110,7 @@ const login = async (req, res) => {
   if (existingToken) {
     const { isValid } = existingToken;
     if (!isValid) {
-      throw new CustomError.UnauthenticatedError('Invalid Credentials');
+      throw new CustomError.UnauthenticatedError('Account locked');
     }
     console.log('login: creating new refreshToken');
     const newRefreshToken = crypto.randomBytes(40).toString('hex');
