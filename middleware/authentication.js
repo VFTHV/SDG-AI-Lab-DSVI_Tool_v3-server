@@ -3,11 +3,12 @@ const { isTokenValid } = require('../utils');
 const Token = require('../models/Token');
 const { createAccessAndRefreshJWT } = require('../utils');
 const crypto = require('crypto');
+const jwt = require('jsonwebtoken');
 
 const authenticateUser = async (req, res, next) => {
   const refreshToken = req.headers['x-refresh-token'];
   const authHeader = req.headers.authorization;
-  console.log('authHeader: ', authHeader.substring(0, 10));
+  console.log('accessToken: ', authHeader.substring(0, 10));
   console.log('refreshToken: ', refreshToken.substring(0, 10));
   //  change all error messages to invalid credentials
 
@@ -18,6 +19,7 @@ const authenticateUser = async (req, res, next) => {
   // CHECK VALIDITY OF ACCESS TOKEN
   const accessToken = authHeader.split(' ')[1];
   try {
+    // ADD LOGICS IF TOKEN IS INVALID, AND NOT EXPIRED
     const payload = isTokenValid(accessToken);
     console.log('accessToken is valid');
     req.user = payload.user;
@@ -30,10 +32,6 @@ const authenticateUser = async (req, res, next) => {
     console.log('Access token verification failed: ', error.message);
   }
 
-  if (!refreshToken) {
-    throw new CustomError.UnauthenticatedError('No refresh token provided');
-  }
-
   // CHECK VALIDITY OF REFRESH TOKEN
   try {
     const payload = isTokenValid(refreshToken);
@@ -43,12 +41,6 @@ const authenticateUser = async (req, res, next) => {
     });
 
     if (!existingToken || !existingToken?.isValid) {
-      // RESET REFRESH TOKEN
-      // possibly set isValid = false
-      console.log('resetting refreshToken');
-      const filter = { user: payload.user.userId };
-      const update = { refreshToken: '' };
-      await Token.findOneAndUpdate(filter, update);
       throw new CustomError.UnauthenticatedError('Invalid refresh token');
     }
 
@@ -69,7 +61,16 @@ const authenticateUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log('Error messge: ', error.message);
+    // set isValid to false here???
+    if (refreshToken) {
+      const decodedRefreshToken = jwt.decode(refreshToken);
+      if (decodedRefreshToken && decodedRefreshToken.user) {
+        const filter = { user: decodedRefreshToken.user.userId };
+        const update = { isValid: false };
+        await Token.findOneAndUpdate(filter, update);
+      }
+    }
+    console.log('Error messge: ', error.name);
     throw new CustomError.UnauthenticatedError('Authentication Invalid');
   }
 };
