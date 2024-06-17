@@ -145,29 +145,18 @@ const login = async (req, res) => {
     refreshToken: refreshToken,
   });
 
-  // use .env lifetime variables here for each type of token
-  // const accessTokenJWT = createAccessAndRefreshJWT({
-  //   payload: { user: tokenUser },
-  //   expiresIn: 100,
-  // });
-  // const refreshTokenJWT = createAccessAndRefreshJWT({
-  //   payload: { user: tokenUser, refreshToken },
-  //   expiresIn: 24 * 60 * 60 * 1,
-  // });
-
   res
     .status(StatusCodes.OK)
     .json({ user: tokenUser, tokens: { accessJWT, refreshJWT } });
 };
 
-// const logout = async (req, res) => {
-//   res.cookie('token', 'logout', {
-//     httpOnly: true,
-//     expires: new Date(Date.now() + 10 * 1000),
-//   });
+const logout = async (req, res) => {
+  const { userId } = req.user;
 
-//   res.status(StatusCodes.OK).send({ msg: 'User logged out' });
-// };
+  await Token.findOneAndDelete({ user: userId });
+
+  res.status(StatusCodes.OK).send({ msg: 'User logged out' });
+};
 
 const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user, tokens: req.tokens });
@@ -177,6 +166,6 @@ module.exports = {
   register,
   login,
   verifyEmail,
-  // logout,
+  logout,
   showCurrentUser,
 };

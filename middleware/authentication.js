@@ -41,6 +41,8 @@ const authenticateUser = async (req, res, next) => {
     });
 
     if (!existingToken || !existingToken?.isValid) {
+      // RESET REFRESH TOKEN
+
       throw new CustomError.UnauthenticatedError('Invalid refresh token');
     }
 
@@ -61,7 +63,7 @@ const authenticateUser = async (req, res, next) => {
 
     next();
   } catch (error) {
-    // set isValid to false here???
+    // BLOCK ACCOUNT IF WRONG REFRESH TOKEN PROVIDED
     if (refreshToken) {
       const decodedRefreshToken = jwt.decode(refreshToken);
       if (decodedRefreshToken && decodedRefreshToken.user) {
